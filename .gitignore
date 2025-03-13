@@ -1,0 +1,11 @@
+/memory
+/data
+/tmp
+/log
+/3D-object-asset
+/baselines
+/third-party
+/yolov8x-worldv2.pt
+*.png
+*.txt
+*.out
