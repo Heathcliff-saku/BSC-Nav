@@ -1,5 +1,7 @@
 /memory
 /data
+/data_hssd
+/data_episode
 /tmp
 /log
 /3D-object-asset

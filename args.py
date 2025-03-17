@@ -5,15 +5,15 @@ def get_args():
     parser.add_argument("--no_vis", action="store_true")
     parser.add_argument("--no_record", action="store_true")
 
-    parser.add_argument("--dataset", type=str, default='mp3d')  #'mp3d'
+    parser.add_argument("--dataset", type=str, default='hm3d')  #'mp3d'
     # habitat env
     # MP3D
-    parser.add_argument("--dataset_dir", type=str, default='/home/orbit/桌面/Nav-2025/data/mp3d/mp3d_habitat/mp3d') 
-    parser.add_argument("--scene_dataset_config_file", type=str, default='/home/orbit/桌面/Nav-2025/data/mp3d/mp3d_habitat/mp3d/mp3d.scene_dataset_config.json')
+    # parser.add_argument("--dataset_dir", type=str, default='/home/orbit/桌面/Nav-2025/data/mp3d/mp3d_habitat/mp3d') 
+    # parser.add_argument("--scene_dataset_config_file", type=str, default='/home/orbit/桌面/Nav-2025/data/mp3d/mp3d_habitat/mp3d/mp3d.scene_dataset_config.json')
     # HM3D
-    # parser.add_argument("--dataset_dir", type=str, default='/home/orbit/桌面/Nav-2025/data/scene_datasets/hm3d/hm3d_v0.2/val') 
-    # parser.add_argument("--scene_dataset_config_file", type=str, default='/home/orbit/桌面/Nav-2025/data/scene_datasets/hm3d/hm3d_annotated_basis.scene_dataset_config.json')
-    parser.add_argument("--scene_name", type=str, default='2azQ1b91cZZ') # 5LpN3gDmAk7 5q7pvUzZiYa kEZ7cmS4wCh 2azQ1b91cZZ 00873-bxsVRursffK
+    parser.add_argument("--dataset_dir", type=str, default='/home/orbit/桌面/Nav-2025/data/scene_datasets/hm3d/hm3d/val') 
+    parser.add_argument("--scene_dataset_config_file", type=str, default='/home/orbit/桌面/Nav-2025/data/scene_datasets/hm3d/hm3d_annotated_basis.scene_dataset_config.json')
+    parser.add_argument("--scene_name", type=str, default='00873-bxsVRursffK') # 5LpN3gDmAk7 5q7pvUzZiYa kEZ7cmS4wCh 2azQ1b91cZZ 00873-bxsVRursffK
     
     
     # agent sensor
@@ -91,18 +91,18 @@ def get_args():
     parser.add_argument("--HM3D_CONFIG_PATH", type=str, default=f"{HABITAT_ROOT_DIR}/habitat-lab/habitat/config/benchmark/nav/objectnav/objectnav_hm3d.yaml")
     parser.add_argument("--MP3D_CONFIG_PATH", type=str, default=f"{HABITAT_ROOT_DIR}/habitat-lab/habitat/config/benchmark/nav/objectnav/objectnav_mp3d.yaml")
     
-    parser.add_argument("--HM3D_SCENE_PREFIX", type=str, default="/home/orbit/桌面/Nav-2025/data/scene_datasets/hm3d")
-    parser.add_argument("--HM3D_EPISODE_PREFIX", type=str, default="/home/orbit/桌面/Nav-2025/baselines/Pixel-Navigator/checkpoints/objectnav_hm3d_v2/val/val.json.gz")
+    parser.add_argument("--HM3D_SCENE_PREFIX", type=str, default="/home/orbit/桌面/Nav-2025/data/scene_datasets/hm3d/")
+    parser.add_argument("--HM3D_EPISODE_PREFIX", type=str, default="/home/orbit/桌面/Nav-2025/baselines/Pixel-Navigator/checkpoints/objectnav_hm3d_v1/val/val.json.gz")
 
     parser.add_argument("--MP3D_SCENE_PREFIX", type=str, default="/home/orbit/桌面/Nav-2025/data/mp3d/mp3d_habitat/")
     parser.add_argument("--MP3D_EPISODE_PREFIX", type=str, default="/home/orbit/桌面/Nav-2025/baselines/Pixel-Navigator/checkpoints/objectnav_mp3d_v1/val/val.json.gz")
 
     parser.add_argument("--image_hfov", type=int, default=90)
 
-    parser.add_argument("--benchmark_dataset", type=str, default='mp3d')
-    parser.add_argument("--eval_episodes", type=int, default=2195)    # hm3d-0.1 2000 / mp3d-0.1 2195  
+    parser.add_argument("--benchmark_dataset", type=str, default='hm3d')
+    parser.add_argument("--eval_episodes", type=int, default=2000)    # hm3d-0.1 2000 / mp3d-0.1 2195  
     parser.add_argument("--max_episode_steps", type=int, default=5000)  
-    parser.add_argument("--success_distance", type=float, default=0.5)  
+    parser.add_argument("--success_distance", type=float, default=1.0)  
     
     
     

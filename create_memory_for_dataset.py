@@ -61,8 +61,8 @@ if __name__ == "__main__":
     memory = VoxelTokenMemory(args, build_map=False, preload_dino=dinov2, preload_yolo=yolow)
     Robot = GESObjectNavRobot(memory, habitat_benchmark_env, load_local_qwen=False)
 
-    for i in tqdm(range(2195)):
-        if i < 158:
+    for i in tqdm(range(1000)):
+        if i < 0:
             obs = Robot.benchmark_env.reset()
             continue
         else:
@@ -78,8 +78,9 @@ if __name__ == "__main__":
             state = Robot.benchmark_env.sim.agents[0].state
             current_island = Robot.benchmark_env.sim.pathfinder.get_island(state.position)
             area_shape = Robot.benchmark_env.sim.pathfinder.island_area(current_island)
-            memory_path = f'{args.memory_path}/objectnav/{args.benchmark_dataset}/{current_scense}_island_{current_island}'
-            
+            # memory_path = f'{args.memory_path}/objectnav/{args.benchmark_dataset}/{current_scense}_island_{current_island}'
+            memory_path = f'{args.memory_path}/imgnav/{args.benchmark_dataset}/{current_scense}_island_{current_island}'
+
             Robot.memory.args.random_move_num = int(area_shape / 2) + 1
             Robot.memory.args.dataset = args.benchmark_dataset
             Robot.memory.args.scene_dataset_config_file = Robot.benchmark_env.current_episode.scene_dataset_config

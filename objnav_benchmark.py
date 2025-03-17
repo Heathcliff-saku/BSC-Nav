@@ -19,7 +19,7 @@ from PIL import Image
 from scipy.spatial.transform import Rotation as R
 
 from ultralytics import YOLOWorld
-from LLMAgent import long_memory_localized, imagenary_helper, succeed_determine_singleview, touching_helper
+from LLMAgent import long_memory_localized, imagenary_helper, succeed_determine_singleview, touching_helper, succeed_determine_singleview_with_imggoal
 from memory_2 import VoxelTokenMemory
 from utils import keyboard_control_fast, adaptive_clustering
 import time
@@ -38,7 +38,7 @@ os.environ["HABITAT_SIM_LOG"] = "quiet"
 
 # 🙀1. 建图一次性把多个楼层建好 --> 根据初始位置（高度/半径）设定Voxel搜索范围 , 根据距离远近设定dict搜索顺序。
 
-def write_metrics(metrics, path="objnav_mp3d_v1_results.csv"):
+def write_metrics(metrics, path="objnav_hm3d_v1_results.csv"):
     if os.path.exists(path):
         with open(path, mode="a", newline="") as csv_file:
             writer = csv.DictWriter(csv_file, fieldnames=metrics.keys())
@@ -391,19 +391,28 @@ class GESObjectNavRobot:
         # else:
         #     return cluster_centers
 
-        
             
-    def working_memory_retrival(self, text_prompts):
-        print("search voxel memory...")
-        text_prompt_extend = imagenary_helper(self.client, text_prompts)
+    def working_memory_retrival(self, prompts):
+        if isinstance(prompts, str):
+            print("search voxel memory...")
+            text_prompt_extend = imagenary_helper(self.client, prompts)
+            best_pos, top_k_positions, top_k_similarity = self.memory.voxel_localized(text_prompt_extend)
 
-        best_pos, top_k_positions, top_k_similarity = self.memory.voxel_localized(text_prompt_extend)
-        
+        else:
+            print("search voxel memory using image observ...")
+            best_pos, top_k_positions, top_k_similarity = self.memory.voxel_localized(prompts)
+            
         cluster_centers, _, _ = self.weighted_cluster_centers(top_k_positions, top_k_similarity)
-        
         print("Extracted Loc Array using voxel memory:", cluster_centers)  
-        np.save(self.memory.memory_save_path + f"/best_pos_topK_{text_prompts}.npy", np.array(top_k_positions))
-        np.save(self.memory.memory_save_path + f"/best_pos_centers_{text_prompts}.npy", np.array(cluster_centers))
+
+        if isinstance(prompts, str):
+            np.save(self.memory.memory_save_path + f"/best_pos_topK_{prompts}.npy", np.array(top_k_positions))
+            np.save(self.memory.memory_save_path + f"/best_pos_centers_{prompts}.npy", np.array(cluster_centers))
+
+        else:
+            np.save(self.memory.memory_save_path + f"/best_pos_topK_{self.benchmark_env.current_episode.object_category}.npy", np.array(top_k_positions))
+            np.save(self.memory.memory_save_path + f"/best_pos_centers_{self.benchmark_env.current_episode.object_category}.npy", np.array(cluster_centers))
+            
         
         best_pos = np.array([cluster_centers])
         return best_pos
@@ -442,25 +451,39 @@ class GESObjectNavRobot:
         # return
 
     # 🙀 定位到execute_path使用save_img_list=True出现内存泄露
-    def check_around(self, text, max_around=2):
+    def check_around(self, prompt, max_around=2):
         for j in range(max_around):
             action_around = ['turn_left'] * int(360 / self.memory.args.turn_left)
             self.execute_path(action_around, save_img_list=True)
             
             with torch.no_grad():
                 obss_tensor = torch.stack([self.preprocess(obs) for obs in self.obss]).to(self.memory.device)
-                text_inputs = open_clip.tokenize([text]).to(self.memory.device)
-                
-                image_features = self.clip_model.encode_image(obss_tensor)
-                text_features = self.clip_model.encode_text(text_inputs)
-                
-                image_features = F.normalize(image_features, p=2, dim=-1) 
-                text_features = F.normalize(text_features, p=2, dim=-1)
-                
-                similarities = torch.matmul(image_features, text_features.T).squeeze(1)
-                similarities = F.softmax(similarities, dim=0)
-                max_val, max_idx = torch.max(similarities, dim=0)
-            
+                if isinstance(prompt, str):
+                    text_inputs = open_clip.tokenize([prompt]).to(self.memory.device)
+                    
+                    image_features = self.clip_model.encode_image(obss_tensor)
+                    text_features = self.clip_model.encode_text(text_inputs)
+                    
+                    image_features = F.normalize(image_features, p=2, dim=-1) 
+                    text_features = F.normalize(text_features, p=2, dim=-1)
+                    
+                    similarities = torch.matmul(image_features, text_features.T).squeeze(1)
+                    similarities = F.softmax(similarities, dim=0)
+                    max_val, max_idx = torch.max(similarities, dim=0)
+
+                else:
+                    image_features = self.clip_model.encode_image(obss_tensor)
+
+                    goal_tensor = torch.stack([self.preprocess(prompt)]).to(self.memory.device)
+                    goal_features = self.clip_model.encode_image(goal_tensor)
+
+                    image_features = F.normalize(image_features, p=2, dim=-1) 
+                    goal_features = F.normalize(goal_features, p=2, dim=-1)
+                    
+                    similarities = torch.matmul(image_features, goal_features.T).squeeze(1)
+                    similarities = F.softmax(similarities, dim=0)
+                    max_val, max_idx = torch.max(similarities, dim=0)
+
             match_obs = [self.obss[max_idx]]
 
             num_turns = int(360 / self.memory.args.turn_left)
@@ -475,7 +498,7 @@ class GESObjectNavRobot:
                 actions = ['turn_right'] * (total_steps - max_idx.item())
             
             self.execute_path(actions)
-            success, need_forward = self.handle_succeed_check(text, match_obs)
+            success, need_forward = self.handle_succeed_check(prompt, match_obs)
 
             if success:
                 self.task_over = True
@@ -494,9 +517,14 @@ class GESObjectNavRobot:
                     self.execute_path(['look_up']*(max_around-1))
 
 
-    def handle_succeed_check(self, text_prompt, obss):
+    def handle_succeed_check(self, prompt, obss):
         while True:
-            succeed_answer = succeed_determine_singleview(self.client, text_prompt, obss) 
+
+            if isinstance(prompt, str):
+                succeed_answer = succeed_determine_singleview(self.client, prompt, obss) 
+            else:
+                succeed_answer = succeed_determine_singleview_with_imggoal(self.client, prompt, obss) 
+
             print(succeed_answer)
             match = self.pattern_unsuccess.search(succeed_answer)
             
@@ -607,6 +635,41 @@ class GESObjectNavRobot:
         
         return self.episode_images, self.episode_topdowns
     
+    def move2imgprompt(self, obs):
+        self.curr_obs = self.benchmark_env.sim.get_sensor_observations(0)
+        self.task_over = False
+
+        best_poses = self.working_memory_retrival(obs)
+        query_num = min(len(best_poses[0]), 3)
+        if best_poses is not None:
+            for best_pos in best_poses[0][:query_num]:
+                self.nav_log['working_memory_query'] += 1
+                self.nav_log['search_point'] += 1
+                best_pos = self._grid2loc(best_pos)
+                try:
+                    path, self.goal = self.memory.Env.move2point(best_pos)
+                    if len(path) > 2000:
+                        print("path too long, skip")
+                        continue
+                    else:
+                        self.execute_path(path[:-1])
+                except Exception as e:
+                    print(f"move2point failed: {e}")
+                    continue
+                
+                self.check_around(obs)
+
+                if self.task_over:
+                    self.execute_path(['stop'])
+                    return self.episode_images, self.episode_topdowns
+                else:
+                    continue
+
+        # self.touching_goal(text_prompt, [Image.fromarray(self.curr_obs["rgb"][:, :, :3])], max_steps=10)
+        self.execute_path(['stop'])
+        
+        return self.episode_images, self.episode_topdowns
+
 
     def keyboard_explore(self):
         last_action = None
@@ -650,7 +713,7 @@ class GESObjectNavRobot:
 
 if __name__ == "__main__":
 
-    csv_path = "objnav_mp3d_v1_results.csv"
+    csv_path = "objnav_hm3d_v1_results.csv"
     args = get_args()
 
     dinov2 = torch.hub.load('facebookresearch/dinov2', args.dino_size, source='github').to('cuda')
@@ -694,7 +757,7 @@ if __name__ == "__main__":
         current_island = Robot.benchmark_env.sim.pathfinder.get_island(state.position)
         area_shape = Robot.benchmark_env.sim.pathfinder.island_area(current_island)
 
-        memory_path = f'{args.memory_path}/objectnav/{args.benchmark_dataset}/{current_scense}_island_{current_island}'
+        memory_path = f'{args.memory_path}/objectnav/{args.benchmark_dataset}_v1/{current_scense}_island_{current_island}'
         
         
         Robot.memory.args.dataset = args.benchmark_dataset

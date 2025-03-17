@@ -45,15 +45,15 @@ def _visualize_rgb_map_3d(pc: np.ndarray, rgb: np.ndarray, best, center):
     vis.destroy_window()
 
 
-grid_pos = np.load("/home/orbit/桌面/Nav-2025/memory/objectnav/mp3d/X7HyMhZNoso_island_0/grid_rgb_pos_floor_0.npy")
-grid_rgb = np.load("/home/orbit/桌面/Nav-2025/memory/objectnav/mp3d/X7HyMhZNoso_island_0/grid_rgb_floor_0.npy")
-# best = np.load('''/home/orbit/桌面/Nav-2025/memory/objectnav/hm3d_v2/00814-p53SfW6mjZe_island_0/best_locs_a chair.npy''')
-# center = np.load('''/home/orbit/桌面/Nav-2025/memory/objectnav/hm3d/00873-bxsVRursffK/best_pos_topK_a plant.npy''')
-best = np.array([[
-            380,
-            597,
-            115
-        ]])
-center = best
+grid_pos = np.load("/home/orbit/桌面/Nav-2025/memory/imgnav/hm3d/00821-eF36g7L6Z9M_island_0/grid_rgb_pos_floor_0.npy")
+grid_rgb = np.load("/home/orbit/桌面/Nav-2025/memory/imgnav/hm3d/00821-eF36g7L6Z9M_island_0/grid_rgb_floor_0.npy")
+best = np.load('''/home/orbit/桌面/Nav-2025/memory/imgnav/hm3d/00821-eF36g7L6Z9M_island_0/best_pos_centers_chair.npy''')
+center = np.load('''/home/orbit/桌面/Nav-2025/memory/imgnav/hm3d/00821-eF36g7L6Z9M_island_0/best_pos_topK_chair.npy''')
+# best = np.array([[
+#             380,
+#             597,
+#             115
+#         ]])
+# center = best
 
 _visualize_rgb_map_3d(grid_pos, grid_rgb, best, center)

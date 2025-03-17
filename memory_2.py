@@ -556,21 +556,25 @@ class VoxelTokenMemory():
         self.diffusion.enable_model_cpu_offload()
         
     
-    def voxel_localized(self, text_prompt, K=100, batch_size=300):
+    def voxel_localized(self, prompt, K=100, batch_size=300):
 
         # self.diffusion = StableDiffusion3Pipeline.from_pretrained("stabilityai/stable-diffusion-3.5-medium", torch_dtype=torch.float16)
-        self.Quantizing(self.args.diffusion_id)
-        self.diffusion = self.diffusion.to(self.device)
+        if isinstance(prompt, str):
+            self.Quantizing(self.args.diffusion_id)
+            self.diffusion = self.diffusion.to(self.device)
 
-        gen_results = self.imaginary(text_prompt)  # 修正为单个 text_prompt
-        query_imgs = [gen_results.images[i] for i in range(self.args.imagenary_num)]
-                
-        del self.diffusion
-        gc.collect()
-        torch.cuda.empty_cache()
+            gen_results = self.imaginary(prompt)  # 修正为单个 text_prompt
+            query_imgs = [gen_results.images[i] for i in range(self.args.imagenary_num)]
+                    
+            del self.diffusion
+            gc.collect()
+            torch.cuda.empty_cache()
         
-        query_img_tensors = torch.stack([self.transform(img) for img in query_imgs]).to(self.device)  # [batch_size, C, H, W]
+            query_img_tensors = torch.stack([self.transform(img) for img in query_imgs]).to(self.device)  # [batch_size, C, H, W]
         
+        else:
+            query_img_tensors = torch.stack([self.transform(prompt)]).to(self.device)
+
         candidates = []
         
         print("localizing...")

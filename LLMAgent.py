@@ -326,6 +326,80 @@ def succeed_determine_singleview(client, text_prompt, obss):
 
 
 
+def succeed_determine_singleview_with_imggoal(client, img_prompt, obss):
+  obss = [obs.resize((512, 512)) for obs in obss]
+  img_prompt = img_prompt.resize((512, 512))
+  base64_images = image_to_base64(obss)
+  base64_images_goal = image_to_base64([img_prompt])
+    
+  messages = [
+    {"role": "system", "content": "You are a helpful assistant."},
+    {"role": "user", "content": [ 
+      
+      {
+        "type": "text",  "text":                        
+        """
+        You will get an image of the navigation target and an image of the current observation from the robot. 
+        1. Analyze the main instance objects contained in the two images, especially the closest objects. Think about what objects they are? What appearance features do they have?
+        2. Compare the two images, combined with the analysis of the step 1, to determine whether the current robot has reached the vicinity of the target. This means that the current observation image is taken at the location of the navigation target image.
+        3. Determine whether need to move forward. If you think the robot has reached the target, you need to further determine whether it needs to move forward a small step to get closer to the target object.
+        Note: The viewpoints of the two images are usually different. You need to judge carefully to avoid misjudgment.
+        Output Format:
+        First Line: Success: yes OR Success: no
+        Second Line (only when 'success: yes'): need forward: yes OR need forward: no
+        Third Line: Give your analysis results in detail
+        Examples
+        '''
+        Success: yes
+        need forward: yes
+        [analysis results]
+        '''
+        or
+        '''
+        Success: yes
+        need forward: no
+        [analysis results]
+        '''
+        or
+        '''
+        Success: no
+        [analysis results]
+        '''
+
+        Please analyze according to the above requirements and respond strictly in the specified format.
+        """
+      }
+                                
+    ]
+    },]
+  
+  for idx, base64_image_goal in enumerate(base64_images_goal):
+      messages[1]["content"].extend([
+          {"type": "text", "text": f"navigation goal image:"},
+          {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{base64_image_goal}"}}
+      ])
+
+  for idx, base64_image in enumerate(base64_images):
+      messages[1]["content"].extend([
+          {"type": "text", "text": f"current observation image:"},
+          {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}}
+      ])
+  
+  messages[1]["content"].extend([
+          {"type": "text", "text": "Now please start thinking step by step"},
+      ])    
+    
+  completion = client.chat.completions.create(
+  model="gpt-4o-mini",
+  timeout=500,
+  messages=messages
+  )
+
+
+  return completion.choices[0].message.content
+
+
+
 def touching_helper(client, text_prompt, obss, model=None, processor=None):
   base64_image = image_to_base64(obss)[0]
   
