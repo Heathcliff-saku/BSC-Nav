@@ -140,6 +140,9 @@ class VoxelTokenMemory():
         self.yolow_results = []
         self.long_memory_dict = []
 
+        self.Quantizing(self.args.diffusion_id)
+        self.diffusion = self.diffusion.to(self.device)
+
     def _clear_memory(self):
         """清理内存中的大型数组和对象"""
         if hasattr(self, 'grid_feat'):
@@ -560,13 +563,13 @@ class VoxelTokenMemory():
 
         # self.diffusion = StableDiffusion3Pipeline.from_pretrained("stabilityai/stable-diffusion-3.5-medium", torch_dtype=torch.float16)
         if isinstance(prompt, str):
-            self.Quantizing(self.args.diffusion_id)
-            self.diffusion = self.diffusion.to(self.device)
-
+            # self.Quantizing(self.args.diffusion_id)
+            # self.diffusion = self.diffusion.to(self.device)
+        
             gen_results = self.imaginary(prompt)  # 修正为单个 text_prompt
             query_imgs = [gen_results.images[i] for i in range(self.args.imagenary_num)]
                     
-            del self.diffusion
+            # del self.diffusion
             gc.collect()
             torch.cuda.empty_cache()
         

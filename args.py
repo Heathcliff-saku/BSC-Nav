@@ -87,6 +87,8 @@ def get_args():
 
     #-----------------------------------------------------------------
     # objectnav benchmark
+    parser.add_argument("--nav_task", type=str, default='objnav') # objnav, imgnav, ovon
+    
     HABITAT_ROOT_DIR = "/home/orbit/桌面/Nav-2025/third-party/habitat-lab"
     parser.add_argument("--HM3D_CONFIG_PATH", type=str, default=f"{HABITAT_ROOT_DIR}/habitat-lab/habitat/config/benchmark/nav/objectnav/objectnav_hm3d.yaml")
     parser.add_argument("--MP3D_CONFIG_PATH", type=str, default=f"{HABITAT_ROOT_DIR}/habitat-lab/habitat/config/benchmark/nav/objectnav/objectnav_mp3d.yaml")

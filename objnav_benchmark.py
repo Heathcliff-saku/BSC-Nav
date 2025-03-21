@@ -19,13 +19,13 @@ from PIL import Image
 from scipy.spatial.transform import Rotation as R
 
 from ultralytics import YOLOWorld
-from LLMAgent import long_memory_localized, imagenary_helper, succeed_determine_singleview, touching_helper, succeed_determine_singleview_with_imggoal
+from LLMAgent import *
 from memory_2 import VoxelTokenMemory
 from utils import keyboard_control_fast, adaptive_clustering
 import time
 import gc
 import torch.nn.functional as F
-
+import random
 from transformers import Qwen2_5_VLForConditionalGeneration, AutoTokenizer, AutoProcessor
 
 from diffusers import StableDiffusion3Pipeline
@@ -211,15 +211,27 @@ class TrajectoryDrawer:
     
 
 class GESObjectNavRobot:
-    def __init__(self, nav_memory, benchmark_env, load_local_qwen=False):
+    def __init__(self, nav_memory, benchmark_env, task='objnav', load_local_qwen=False):
 
         self.memory = nav_memory
         self.benchmark_env = benchmark_env 
-
+        self.task = task
         self.client = OpenAI(
-                base_url='https://api.nuwaapi.com/v1',
-                api_key='sk-QnaJbJERtm51P6D60KjdxsXjai2KFFfPUF5LHbsXBqUBPQHv'
+                # base_url='https://api.nuwaapi.com/v1',
+                # api_key='sk-A2HvPdqB5NN2Dj1AiRk1Z0085Q6PzJ3ls0nbt2BQTcfvWagG'
+                base_url='https://xiaoai.plus/v1',
+                api_key='sk-maKQVsTB0OwWx8puEfFjP0Bncq6KZ9LtuLl0bjKoz0zBPxEk'
             )
+        
+        self.api_key_pool = [
+            'sk-maKQVsTB0OwWx8puEfFjP0Bncq6KZ9LtuLl0bjKoz0zBPxEk',
+            'sk-67UvJf8exciXyfF2SItVenxPgdSo9Zg9thHptAe4tBIWkP7d',
+            'sk-Q9wIUZ0mSNQKRZLcCa6t387rRPR5QJrqvMWWzYK2ngBWmwvz',
+            'sk-kXvfyQkjctI3cziIytRVSxs2bUHfzEXgQh6C2vnGIbauofvt',
+            'sk-m6viotUq3PMIR6ROBjDdODQK9W2Ur6sYc6ujzvBegNMvpsj1',
+            'sk-9h5cah2084Mr5xLm9zHGt7MzHRgXD17Y5E6SGcOiOMubG30Q'
+        ]
+        self.api_id = 0
 
         self.pattern_loc = re.compile(r'Nav Loc:\s*\[(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\]')
         self.pattern_unable = re.compile(r'Nav Loc:\s*Unable to find', re.IGNORECASE)
@@ -392,10 +404,42 @@ class GESObjectNavRobot:
         #     return cluster_centers
 
             
-    def working_memory_retrival(self, prompts):
+    def working_memory_retrival(self, prompts, vis_aug=False):
+
+        if vis_aug:
+            path = ['turn_left'] * int(360 / self.memory.args.turn_left)
+            self.execute_path(path, save_img_list=True)
+            vis = self.obss[::9]
+        else:
+            vis = None
         if isinstance(prompts, str):
             print("search voxel memory...")
-            text_prompt_extend = imagenary_helper(self.client, prompts)
+            if vis:
+                while True:
+                    try:
+                        answer = imagenary_helper_visaug(self.client, prompts, vis)
+                        print("aug_prompt:", answer)
+                    except:
+                        print("error, try again .....................................................")
+                        time.sleep(5)
+                        continue
+                    pattern = r"\*\*Enhancement Description\*\*:\s*(.*?)(?=\n|\Z)"
+                    match = re.search(pattern, answer, re.DOTALL)
+                    if match:
+                        text_prompt_extend = match.group(1).strip()
+                        break
+                    else:
+                        continue
+            else: 
+                while True:
+                    try:
+                        text_prompt_extend = imagenary_helper(self.client, prompts)
+                        break
+                    except:
+                        print("error, try again .....................................................")
+                        time.sleep(5)
+                        continue
+            
             best_pos, top_k_positions, top_k_similarity = self.memory.voxel_localized(text_prompt_extend)
 
         else:
@@ -410,9 +454,9 @@ class GESObjectNavRobot:
             np.save(self.memory.memory_save_path + f"/best_pos_centers_{prompts}.npy", np.array(cluster_centers))
 
         else:
-            np.save(self.memory.memory_save_path + f"/best_pos_topK_{self.benchmark_env.current_episode.object_category}.npy", np.array(top_k_positions))
-            np.save(self.memory.memory_save_path + f"/best_pos_centers_{self.benchmark_env.current_episode.object_category}.npy", np.array(cluster_centers))
-            
+            if self.memory.args.benchmark_dataset == 'hm3d':
+                np.save(self.memory.memory_save_path + f"/best_pos_topK_{self.benchmark_env.current_episode.object_category}.npy", np.array(top_k_positions))
+                np.save(self.memory.memory_save_path + f"/best_pos_centers_{self.benchmark_env.current_episode.object_category}.npy", np.array(cluster_centers)) 
         
         best_pos = np.array([cluster_centers])
         return best_pos
@@ -452,6 +496,8 @@ class GESObjectNavRobot:
 
     # 🙀 定位到execute_path使用save_img_list=True出现内存泄露
     def check_around(self, prompt, max_around=2):
+        if self.task == 'imgnav':
+            max_around = 1 # imgnav don't use look up down
         for j in range(max_around):
             action_around = ['turn_left'] * int(360 / self.memory.args.turn_left)
             self.execute_path(action_around, save_img_list=True)
@@ -514,16 +560,24 @@ class GESObjectNavRobot:
                     self.execute_path(['look_down'])
                 else:
                     print("Max around attempts reached, target not found.")
-                    self.execute_path(['look_up']*(max_around-1))
+                    path = ['look_up']*(max_around-1)
+                    if len(path) != 0:
+                        self.execute_path(path)
 
 
     def handle_succeed_check(self, prompt, obss):
         while True:
-
-            if isinstance(prompt, str):
-                succeed_answer = succeed_determine_singleview(self.client, prompt, obss) 
-            else:
-                succeed_answer = succeed_determine_singleview_with_imggoal(self.client, prompt, obss) 
+            self.api_id += 1 
+            self.client.api_key = self.api_key_pool[self.api_id%6]
+            try:
+                if isinstance(prompt, str):
+                    succeed_answer = succeed_determine_singleview(self.client, prompt, obss) 
+                else:
+                    succeed_answer = succeed_determine_singleview_with_imggoal(self.client, prompt, obss) 
+            except:
+                print("error, try again .....................................................")
+                time.sleep(5)
+                continue
 
             print(succeed_answer)
             match = self.pattern_unsuccess.search(succeed_answer)
@@ -658,6 +712,42 @@ class GESObjectNavRobot:
                     continue
                 
                 self.check_around(obs)
+
+                if self.task_over:
+                    self.execute_path(['stop'])
+                    return self.episode_images, self.episode_topdowns
+                else:
+                    continue
+
+        # self.touching_goal(text_prompt, [Image.fromarray(self.curr_obs["rgb"][:, :, :3])], max_steps=10)
+        self.execute_path(['stop'])
+        
+        return self.episode_images, self.episode_topdowns
+    
+
+    def move2NaturalLanguageprompt(self, text_prompt):
+        self.curr_obs = self.benchmark_env.sim.get_sensor_observations(0)
+        self.task_over = False
+        
+        best_poses = self.working_memory_retrival(text_prompt, vis_aug=False)
+        query_num = min(len(best_poses[0]), 5)
+        if best_poses is not None:
+            for best_pos in best_poses[0][:query_num]:
+                self.nav_log['working_memory_query'] += 1
+                self.nav_log['search_point'] += 1
+                best_pos = self._grid2loc(best_pos)
+                try:
+                    path, self.goal = self.memory.Env.move2point(best_pos)
+                    if len(path) > 2000:
+                        print("path too long, skip")
+                        continue
+                    else:
+                        self.execute_path(path[:-1])
+                except Exception as e:
+                    print(f"move2point failed: {e}")
+                    continue
+                
+                self.check_around(text_prompt)
 
                 if self.task_over:
                     self.execute_path(['stop'])

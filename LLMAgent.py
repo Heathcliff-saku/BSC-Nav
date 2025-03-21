@@ -5,6 +5,68 @@ import base64
 from PIL import Image
 from qwen_vl_utils import process_vision_info
 
+
+def imagenary_helper_visaug(client, text_prompt, vis):
+    base64_images = image_to_base64(vis)
+    completion = client.chat.completions.create(
+      model="gpt-4o",
+      timeout=500,
+      messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": [
+          {"type": "text", "text": """
+          You are an expert in generating prompts for text-to-image models. 
+          Your task is to enhance a given original goal description, which often only mentions a general category or a simple phrase describing the target object, by incorporating detailed context from four current scene images. You will create a more imaginative and contextually enriched description, using elements observed in the scene to create a coherent and vivid visual. This description will be used to guide a text-to-image model to generate an image that aligns with the style and context of the current scene.
+          It is crucial that the target object remains the primary visual focus of the image. To complete this task effectively, it's suggested to follow these steps:
+          1. **Understand the Environment**: Extract and comprehend details from the provided observation images, such as the overall style, decoration, and elements of the scene. For example, is this a modern home, a classical residence, an exhibition hall, or an office? Consider the style in detail, and understand the context of the environment.
+          2. **Expand the Original Description **: Based on the scene analysis from step 1, enrich the original description with finer details. This may include materials, colors, textures, placement, and environmental elements surrounding the target object.
+          3. **Maintain Visual Focus **: Ensure that any additional context or background details do not overshadow the main target object. The primary subject should remain the focal point of the generated image, using language that emphasizes its prominence in the scene.
+
+          **Guidelines for Creating Enhanced Descriptions: **
+          1. Details: Include sensory details like colors, textures, lighting, and reflections.
+          2. Background Elements: Add appropriate background elements that complement the scene without detracting from the focus of the image.
+          Focus Phrasing: Use language that naturally draws attention to the target object (e.g., "centered," "prominently placed," "as the focal point").
+          3. Balance: Strike a balance between richness and simplicity. The target object or scene should always dominate the final image.
+          **Enhanced Description Output Requirements: **
+          1. Provide a refined and detailed description in English.
+          2. Ensure the enhancement creates a vivid, coherent, and engaging scene, supporting the original description.
+          3. Avoid overly complex narratives or elements that distract from the primary object or scene.
+          4. Keep the description concise, limiting it to 70 words or less.
+         
+          **Examples:**
+          1.
+          Original Goal Description: A green vase. 
+          Enhanced Description: A vibrant green ceramic vase, with a glossy, smooth surface, placed centrally on a polished wooden table. Soft natural light illuminates the vase from the large window behind it, casting gentle shadows on the table. The surrounding room is decorated in minimalist modern style with neutral tones, ensuring the vase is the central focal point of the scene.
+          2.
+          Original Goal Description: A armchair. 
+          Enhanced Description: A sleek, modern blue armchair, upholstered in soft velvet, positioned prominently in a stylish living room. The chair is placed near a large floor-to-ceiling window, allowing natural light to highlight its deep blue hue. The room features minimalist decor with white walls, light wood flooring, and a few abstract art pieces on the walls. The armchair stands out as the main focal point, inviting comfort and relaxation.
+          3.
+          Original Goal Description: A desk. 
+          Enhanced Description: A robust metal desk, with a weathered, matte surface, placed against a brick wall in an industrial-style office. The desk features exposed steel legs, and on its surface lies a sleek laptop, a coffee mug, and a few scattered papers. Overhead, a vintage filament bulb hangs from a chain, casting a warm glow over the scene. The surrounding decor includes minimalistic shelves and a large plant in the corner, yet the desk remains the focal point in the room’s urban, raw atmosphere.
+
+        """
+        },
+        {"type": "text", "text": f"""
+         Now, the Original Goal Description is "{text_prompt}", and the observation images are:
+        """
+        },
+        {"type": "text", "text": f"observation1:"},
+        {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{base64_images[0]}"}},
+        {"type": "text", "text": f"observation2:"},
+        {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{base64_images[2]}"}},
+        {"type": "text", "text": f"""
+         please follow the above requirements and examples to enhance this description, think step by step and give your analysis process and the final enhancement description following the format:
+         **analysis process**: [your analysis process here]
+         **enhancement description**: [your enhancement description here]
+        """
+        }]
+        }]
+        
+    )
+    
+    return completion.choices[0].message.content
+
+
 def imagenary_helper(client, text_prompt):
     completion = client.chat.completions.create(
       model="gpt-4o",
@@ -144,7 +206,7 @@ def long_memory_localized(client, text_prompt, long_memory):
 
       return completion.choices[0].message.content
     
-def image_to_base64(images: Image.Image, fmt='png') -> str:
+def image_to_base64(images: Image.Image, fmt="JPEG") -> str:
 
     base64_images = []
     for img in images:
@@ -368,29 +430,29 @@ def succeed_determine_singleview_with_imggoal(client, img_prompt, obss):
 
         Please analyze according to the above requirements and respond strictly in the specified format.
         """
-      }
-                                
+      },
+      {
+         "type": "text", "text": f"navigation goal image:"
+      },
+      {
+         "type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{base64_images_goal[0]}"}
+      },
+      {
+         "type": "text", "text": f"current observation image:"
+      },
+      {
+         "type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{base64_images[0]}"}
+      },  
+      {
+         "type": "text", "text": "Now please start analysing."
+      },                          
+    
+    ],
+    }
     ]
-    },]
-  
-  for idx, base64_image_goal in enumerate(base64_images_goal):
-      messages[1]["content"].extend([
-          {"type": "text", "text": f"navigation goal image:"},
-          {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{base64_image_goal}"}}
-      ])
-
-  for idx, base64_image in enumerate(base64_images):
-      messages[1]["content"].extend([
-          {"type": "text", "text": f"current observation image:"},
-          {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}}
-      ])
-  
-  messages[1]["content"].extend([
-          {"type": "text", "text": "Now please start thinking step by step"},
-      ])    
     
   completion = client.chat.completions.create(
-  model="gpt-4o-mini",
+  model="gpt-4o",
   timeout=500,
   messages=messages
   )

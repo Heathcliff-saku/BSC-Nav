@@ -33,6 +33,7 @@ from diffusers import BitsAndBytesConfig, SD3Transformer2DModel
 
 from objnav_benchmark import *
 
+
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 os.environ["MAGNUM_LOG"] = "quiet"
 os.environ["HABITAT_SIM_LOG"] = "quiet"
@@ -40,10 +41,9 @@ os.environ["HABITAT_SIM_LOG"] = "quiet"
 # 🙀1. 建图一次性把多个楼层建好 --> 根据初始位置（高度/半径）设定Voxel搜索范围 , 根据距离远近设定dict搜索顺序。
 
 
-
 if __name__ == "__main__":
 
-    csv_path = "imgnav_mp3d_results.csv"
+    csv_path = "ovnav_mp3d_results.csv"
     args = get_args()
 
     dinov2 = torch.hub.load('facebookresearch/dinov2', args.dino_size, source='github').to('cuda')
@@ -51,14 +51,14 @@ if __name__ == "__main__":
     yolow.set_classes(args.detect_classes)
     # diffusion = Quantizing(args.diffusion_id).to('cuda')
 
-    habitat_benchmark_env = get_objnav_env(args)
+    habitat_benchmark_env = get_ovon_env(args)
     # habitat_benchmark_env.sim.episode_iterator.set
     # goal = [habitat_benchmark_env.episode_iterator.episodes[i].object_category for i in range(200)]
     # goal = list(set(goal))
     # print(goal)
 
     memory = VoxelTokenMemory(args, build_map=False, preload_dino=dinov2, preload_yolo=yolow)
-    Robot = GESObjectNavRobot(memory, habitat_benchmark_env, task='imgnav') # task ['objnav', 'instance_imgnav','imgnav']
+    Robot = GESObjectNavRobot(memory, habitat_benchmark_env) # task ['objnav', 'instance_imgnav','imgnav']
 
     start_episode = get_start_episode(csv_path)
 
@@ -87,7 +87,7 @@ if __name__ == "__main__":
         current_island = Robot.benchmark_env.sim.pathfinder.get_island(state.position)
         area_shape = Robot.benchmark_env.sim.pathfinder.island_area(current_island)
 
-        memory_path = f'{args.memory_path}/imgnav/{args.benchmark_dataset}/{current_scense}_island_{current_island}'
+        memory_path = f'{args.memory_path}/ovnav/{args.benchmark_dataset}/{current_scense}_island_{current_island}'
         print(memory_path)
         
         Robot.memory.args.dataset = args.benchmark_dataset
@@ -105,30 +105,19 @@ if __name__ == "__main__":
 
         # perform task
         Robot.reset(obs)
-        # Robot.keyboard_explore()
-        # goal_image_id = Robot.benchmark_env.current_episode.goal_image_id
-        # goal_viewpoint = Robot.benchmark_env.current_episode.goals[0].view_points[goal_image_id].agent_state
-        # goal_image = Robot.benchmark_env.render(goal_viewpoint)
-        if args.benchmark_dataset == 'hm3d':
-            goal_img = obs['instance_imagegoal']
-            print(f"find {Robot.benchmark_env.current_episode.object_category}")
-        else:
-            goal_img = obs['imagegoal']
-        goal_img = Image.fromarray(goal_img[:, :, :3])
+        print(f"find {Robot.benchmark_env.current_episode.object_category}")
         # goal_img.show()
-        episode_images, episode_topdowns = Robot.move2imgprompt(goal_img)
+        episode_images, episode_topdowns = Robot.move2NaturalLanguageprompt(f'a {habitat_benchmark_env.current_episode.object_category}')
         
         for image,topdown in zip(episode_images,episode_topdowns):
             fps_writer.append_data(image)
             topdown_writer.append_data(topdown)
         fps_writer.close()
         topdown_writer.close()
-        goal_img.save(os.path.join(dir, 'goal.png'))
-        goal_describe = habitat_benchmark_env.current_episode.object_category if args.benchmark_dataset == 'hm3d' else None
         evaluation_metrics = {'success':habitat_benchmark_env.get_metrics()['success'],
                                'spl':habitat_benchmark_env.get_metrics()['spl'],
                                'distance_to_goal':habitat_benchmark_env.get_metrics()['distance_to_goal'],
-                               'object_goal': goal_describe,
+                               'object_goal': habitat_benchmark_env.current_episode.object_category,
                                'id': args.scene_name,
                                'island': current_island,
                                'island_area': area_shape,
