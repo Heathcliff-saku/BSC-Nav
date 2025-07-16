@@ -11,7 +11,7 @@ while [ $retry_count -lt $MAX_RETRIES ]; do
     echo "================ 第 $((retry_count+1)) 次尝试，开始于 $(date) =================" >> "$LOG_FILE"
     
     # 运行Python脚本，它会自动检测CSV文件并从正确的位置开始
-    python -u "$PYTHON_SCRIPT" --no_record --no_vis --load_single_floor "$@" >> "$LOG_FILE" 2>&1
+    python -u "$PYTHON_SCRIPT" --no_record --no_vis --load_single_floor --use_only_working_memory "$@" >> "$LOG_FILE" 2>&1
     
     # 检查脚本退出状态
     EXIT_CODE=$?

@@ -30,10 +30,10 @@ def get_args():
     parser.add_argument("--depth_img_for_lidar_n", type=int, default=20)
     
     # actions
-    parser.add_argument("--move_forward", type=float, default=0.1)
+    parser.add_argument("--move_forward", type=float, default=0.25)
     parser.add_argument("--move_backward", type=float, default=-0.1)
-    parser.add_argument("--turn_left", type=int, default=5)
-    parser.add_argument("--turn_right", type=int, default=5)
+    parser.add_argument("--turn_left", type=int, default=30)
+    parser.add_argument("--turn_right", type=int, default=30)
     
     
     # memory
@@ -74,7 +74,7 @@ def get_args():
     # agent
     parser.add_argument("--explore_first", action="store_true")
     # parser.add_argument("--load_memory_path", type=str, default='/home/orbit/桌面/Nav-2025/memory/2azQ1b91cZZ_4')
-    parser.add_argument("--load_memory_path", type=str, default='/home/orbit/桌面/Nav-2025/memory/00873-bxsVRursffK_1')
+    parser.add_argument("--load_memory_path", type=str, default='/home/orbit/桌面/Nav-2025/memory/objectnav/hm3d_v2/00814-p53SfW6mjZe_island_0')
     parser.add_argument("--quite", type=bool, default=True)
 
     # single-floor or whole house in loading memory
@@ -83,18 +83,18 @@ def get_args():
     # exploring
     parser.add_argument("--random_move_num", type=float, default=30)
 
-
+    parser.add_argument("--use_only_working_memory", action="store_true")
 
     #-----------------------------------------------------------------
     # objectnav benchmark
-    parser.add_argument("--nav_task", type=str, default='objnav') # objnav, imgnav, ovon
+    parser.add_argument("--nav_task", type=str, default='objnav') # objnav, imgnav, ovon, r2r
     
     HABITAT_ROOT_DIR = "/home/orbit/桌面/Nav-2025/third-party/habitat-lab"
     parser.add_argument("--HM3D_CONFIG_PATH", type=str, default=f"{HABITAT_ROOT_DIR}/habitat-lab/habitat/config/benchmark/nav/objectnav/objectnav_hm3d.yaml")
     parser.add_argument("--MP3D_CONFIG_PATH", type=str, default=f"{HABITAT_ROOT_DIR}/habitat-lab/habitat/config/benchmark/nav/objectnav/objectnav_mp3d.yaml")
     
     parser.add_argument("--HM3D_SCENE_PREFIX", type=str, default="/home/orbit/桌面/Nav-2025/data/scene_datasets/hm3d/")
-    parser.add_argument("--HM3D_EPISODE_PREFIX", type=str, default="/home/orbit/桌面/Nav-2025/baselines/Pixel-Navigator/checkpoints/objectnav_hm3d_v1/val/val.json.gz")
+    parser.add_argument("--HM3D_EPISODE_PREFIX", type=str, default="/home/orbit/桌面/Nav-2025/baselines/Pixel-Navigator/checkpoints/objectnav_hm3d_v2/val/val.json.gz")
 
     parser.add_argument("--MP3D_SCENE_PREFIX", type=str, default="/home/orbit/桌面/Nav-2025/data/mp3d/mp3d_habitat/")
     parser.add_argument("--MP3D_EPISODE_PREFIX", type=str, default="/home/orbit/桌面/Nav-2025/baselines/Pixel-Navigator/checkpoints/objectnav_mp3d_v1/val/val.json.gz")
@@ -102,7 +102,7 @@ def get_args():
     parser.add_argument("--image_hfov", type=int, default=90)
 
     parser.add_argument("--benchmark_dataset", type=str, default='hm3d')
-    parser.add_argument("--eval_episodes", type=int, default=2000)    # hm3d-0.1 2000 / mp3d-0.1 2195  
+    parser.add_argument("--eval_episodes", type=int, default=1000)    # hm3d-0.1 2000 / mp3d-0.1 2195  
     parser.add_argument("--max_episode_steps", type=int, default=5000)  
     parser.add_argument("--success_distance", type=float, default=1.0)  
     

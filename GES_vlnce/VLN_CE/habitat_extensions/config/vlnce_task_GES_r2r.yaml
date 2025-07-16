@@ -1,0 +1,53 @@
+ENVIRONMENT:
+  MAX_EPISODE_STEPS: 500
+SIMULATOR:
+  ACTION_SPACE_CONFIG: v0
+  AGENT_0:
+    SENSORS: ['RGB_SENSOR', 'DEPTH_SENSOR']
+  FORWARD_STEP_SIZE: 0.1
+  TURN_ANGLE: 5
+  HABITAT_SIM_V0:
+    GPU_DEVICE_ID: 0
+    ALLOW_SLIDING: True
+  RGB_SENSOR:
+    WIDTH: 680
+    HEIGHT: 680
+    HFOV: 90
+    TYPE: HabitatSimRGBSensor
+    POSITION: [0, 1.5, 0]
+  DEPTH_SENSOR:
+    WIDTH: 680
+    HEIGHT: 680
+    POSITION: [0, 1.5, 0]
+
+TASK:
+  TYPE: VLN-v0
+  SUCCESS_DISTANCE: 3.0
+  SENSORS: [
+    INSTRUCTION_SENSOR,
+    SHORTEST_PATH_SENSOR,
+    VLN_ORACLE_PROGRESS_SENSOR
+  ]
+  INSTRUCTION_SENSOR_UUID: instruction
+  POSSIBLE_ACTIONS: [STOP, MOVE_FORWARD, TURN_LEFT, TURN_RIGHT, LOOK_UP, LOOK_DOWN]
+  MEASUREMENTS: [
+    TOP_DOWN_MAP_VLNCE,
+    DISTANCE_TO_GOAL,
+    SUCCESS,
+    SPL,
+    NDTW,
+    PATH_LENGTH,
+    ORACLE_SUCCESS,
+    STEPS_TAKEN
+  ]
+  SUCCESS:
+    SUCCESS_DISTANCE: 3.0
+  SPL:
+    SUCCESS_DISTANCE: 3.0
+  NDTW:
+    GT_PATH: /home/orbit/桌面/Nav-2025/data_episode/vln/R2R_VLNCE_v1-3_preprocessed/{split}/{split}_gt.json.gz
+DATASET:
+  TYPE: VLN-CE-v1
+  SPLIT: val_unseen
+  DATA_PATH: /home/orbit/桌面/Nav-2025/data_episode/vln/R2R_VLNCE_v1-3_preprocessed/{split}/{split}.json.gz
+  SCENES_DIR: /home/orbit/桌面/Nav-2025/data/mp3d/mp3d_habitat/

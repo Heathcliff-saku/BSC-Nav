@@ -43,7 +43,7 @@ os.environ["HABITAT_SIM_LOG"] = "quiet"
 
 if __name__ == "__main__":
 
-    csv_path = "imgnav_mp3d_results.csv"
+    csv_path = "imgnav_mp3d_results_forfig.csv"
     args = get_args()
 
     dinov2 = torch.hub.load('facebookresearch/dinov2', args.dino_size, source='github').to('cuda')
@@ -58,10 +58,10 @@ if __name__ == "__main__":
     # print(goal)
 
     memory = VoxelTokenMemory(args, build_map=False, preload_dino=dinov2, preload_yolo=yolow)
-    Robot = GESObjectNavRobot(memory, habitat_benchmark_env, task='imgnav') # task ['objnav', 'instance_imgnav','imgnav']
+    Robot = GESObjectNavRobot(memory, habitat_benchmark_env)
 
     start_episode = get_start_episode(csv_path)
-
+    start_episode = 44
 
     for i in tqdm(range(args.eval_episodes)):
         if i < start_episode:
@@ -104,7 +104,7 @@ if __name__ == "__main__":
             Robot.memory.create_memory()
 
         # perform task
-        Robot.reset(obs)
+        Robot.reset(obs, dir)
         # Robot.keyboard_explore()
         # goal_image_id = Robot.benchmark_env.current_episode.goal_image_id
         # goal_viewpoint = Robot.benchmark_env.current_episode.goals[0].view_points[goal_image_id].agent_state
@@ -116,7 +116,7 @@ if __name__ == "__main__":
             goal_img = obs['imagegoal']
         goal_img = Image.fromarray(goal_img[:, :, :3])
         # goal_img.show()
-        episode_images, episode_topdowns = Robot.move2imgprompt(goal_img)
+        episode_images, episode_topdowns, _ = Robot.move2imgprompt(goal_img)
         
         for image,topdown in zip(episode_images,episode_topdowns):
             fps_writer.append_data(image)

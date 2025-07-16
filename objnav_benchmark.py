@@ -9,6 +9,7 @@ import cv2
 import csv
 from pathlib import Path
 from habitat.utils.visualizations.maps import colorize_draw_agent_and_fit_to_height
+from vlnce_maps import colorize_draw_agent_and_fit_to_height_vlnce
 import re
 from openai import OpenAI
 import open_clip
@@ -49,8 +50,11 @@ def write_metrics(metrics, path="objnav_hm3d_v1_results.csv"):
             writer.writeheader()
             writer.writerow(metrics)
 
-def adjust_topdown(metrics):
-    return cv2.cvtColor(colorize_draw_agent_and_fit_to_height(metrics['top_down_map'],1024),cv2.COLOR_BGR2RGB)
+def adjust_topdown(metrics, args):
+    if args.nav_task != 'vlnce':
+        return cv2.cvtColor(colorize_draw_agent_and_fit_to_height(metrics['top_down_map'],1024),cv2.COLOR_BGR2RGB)
+    else:
+        return cv2.cvtColor(colorize_draw_agent_and_fit_to_height_vlnce(metrics['top_down_map_vlnce'],1024),cv2.COLOR_BGR2RGB)
 
 def show_obs(obs, map_2d=None):
     bgr = cv2.cvtColor(obs["rgb"], cv2.COLOR_RGB2BGR)
@@ -215,12 +219,13 @@ class GESObjectNavRobot:
 
         self.memory = nav_memory
         self.benchmark_env = benchmark_env 
-        self.task = task
         self.client = OpenAI(
                 # base_url='https://api.nuwaapi.com/v1',
                 # api_key='sk-A2HvPdqB5NN2Dj1AiRk1Z0085Q6PzJ3ls0nbt2BQTcfvWagG'
                 base_url='https://xiaoai.plus/v1',
-                api_key='sk-maKQVsTB0OwWx8puEfFjP0Bncq6KZ9LtuLl0bjKoz0zBPxEk'
+                api_key='sk-XalCM6C0Wocy4amFS1RNj8KJMqcNKJbD95Uhgm0rzWkYg15Q'
+                # api_key='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'
+                
             )
         
         self.api_key_pool = [
@@ -247,10 +252,17 @@ class GESObjectNavRobot:
             self.qwen_model, self.qwen_processor = load_qwen()
 
         self.nav_log = {'long_memory_query':0, 'working_memory_query':0, 'search_point':0, 'success':0}
+        self.state_hist = []
+        self.agent_response_log = []
+        self.loc_hist = {'long_memory':[], 'working_memory':[]}
+
+        self.log_dir = "./tmp/trajectory_0"
+        os.makedirs(self.log_dir, exist_ok=True)
 
         self.obss = []
 
-    def reset(self, obs=None):
+    def reset(self, obs=None, log_dir=None):
+
         # 清理之前的观察数据
         if hasattr(self, 'episode_images'):
             del self.episode_images
@@ -261,15 +273,118 @@ class GESObjectNavRobot:
         
         # 重新初始化观察数据
         self.curr_obs = obs
-        self.episode_images = [self.curr_obs['rgb']]
-        self.episode_topdowns = [adjust_topdown(self.benchmark_env.get_metrics())]
+
+        if obs is not None:
+            self.episode_images = [self.curr_obs['rgb']]
+            self.episode_topdowns = [adjust_topdown(self.benchmark_env.get_metrics(), self.memory.args)]
+        else:
+            self.episode_images = []
+            self.episode_topdowns = []
+
+        self.curr_action = ''
+        self.curr_agent_response = ''
+        self.episode_vedio = []
+        # self.episode_vedio = self.draw_vedio_frame()
         
         # 重置导航日志
         self.nav_log = {'long_memory_query':0, 'working_memory_query':0, 'search_point':0, 'success':0}
 
+        self.state_hist = []
+        self.agent_response_log = []
+        self.loc_hist = {'long_memory':[], 'working_memory':[]}
+        if log_dir is not None:
+            self.log_dir = log_dir
+            os.makedirs(self.log_dir, exist_ok=True)
+
         # 强制进行垃圾回收
         gc.collect()
         torch.cuda.empty_cache()
+
+    def draw_vedio_frame(self):
+                           
+        def put_wrapped_text(img, text, position, font, font_scale, color, thickness, line_spacing=5):
+            max_width = img.shape[1] - 40  # 左右各留20像素边距
+            words = text.split(' ')
+            lines = []
+            current_line = []
+            
+            for word in words:
+                current_line.append(word)
+                # 获取当前行的宽度
+                (line_width, _) = cv2.getTextSize(' '.join(current_line), font, font_scale, thickness)[0]
+                
+                if line_width > max_width:
+                    # 如果超过最大宽度，将最后一个词移到下一行
+                    current_line.pop()
+                    lines.append(' '.join(current_line))
+                    current_line = [word]
+            
+            # 添加最后一行
+            if current_line:
+                lines.append(' '.join(current_line))
+            
+            y = position[1]
+            for line in lines:
+                cv2.putText(img, line, (position[0], y), font, font_scale, color, thickness)
+                y += int((_[1] + line_spacing) * 1.5)  # 行间距
+            
+            return y  # 返回最后一行的y坐标
+        
+        if self.memory.args.nav_task in ['objnav', 'ovon']:
+            task_goal = self.benchmark_env.current_episode.object_category
+            curr_rgb = self.curr_obs['rgb']
+            curr_topdown = adjust_topdown(self.benchmark_env.get_metrics(), self.memory.args)
+            action = self.curr_action
+            response = self.curr_agent_response
+        
+            # 调整topdown地图大小
+            topdown_size = (curr_rgb.shape[0]//2, curr_rgb.shape[1]//2)
+            curr_topdown = cv2.resize(curr_topdown, topdown_size)
+            
+            # 创建底部空白区域用于文本
+            text_area_height = 300  # 增加文本区域高度以适应换行
+            canvas_width = curr_rgb.shape[1]
+            text_area = np.ones((text_area_height, canvas_width, 3), dtype=np.uint8) * 255
+            
+            # 将RGB图像和缩小后的topdown地图水平连接
+            top_row = np.hstack((curr_rgb, cv2.resize(curr_topdown, (curr_rgb.shape[1], curr_rgb.shape[0]))))
+            
+            # 将图像和文本区域垂直连接
+            final_image = np.vstack((top_row, text_area))
+            
+            # 设置文本参数
+            font = cv2.FONT_HERSHEY_SIMPLEX
+            font_scale = 0.7
+            font_color = (0, 0, 0)
+            thickness = 2
+            padding = 20
+            
+            # 添加任务目标
+            next_y = put_wrapped_text(
+                final_image,
+                f"Task Goal: {task_goal}",
+                (padding, top_row.shape[0] + 40),
+                font, font_scale, font_color, thickness
+            )
+            
+            # 添加当前动作
+            next_y = put_wrapped_text(
+                final_image,
+                f"Action: {action}",
+                (padding, next_y + 20),  # 在上一个文本下方20像素
+                font, font_scale, font_color, thickness
+            )
+            
+            # 添加响应
+            next_y = put_wrapped_text(
+                final_image,
+                f"Response: {response}",
+                (padding, next_y + 20),
+                font, font_scale, font_color, thickness
+            )
+            
+            return final_image
+
 
     def _grid2loc(self, grid_id):
         
@@ -404,7 +519,11 @@ class GESObjectNavRobot:
         #     return cluster_centers
 
             
-    def working_memory_retrival(self, prompts, vis_aug=False):
+    def working_memory_retrival(self, prompts, vis_aug=False, text_aug=True, region_radius=np.inf, curr_grid=None):
+        
+        if curr_grid is None and region_radius != np.inf:
+            curr_state = self.benchmark_env.sim.agents[0].get_state().position
+            curr_grid = self._loc2grid(curr_state)
 
         if vis_aug:
             path = ['turn_left'] * int(360 / self.memory.args.turn_left)
@@ -414,42 +533,60 @@ class GESObjectNavRobot:
             vis = None
         if isinstance(prompts, str):
             print("search voxel memory...")
-            if vis:
-                while True:
-                    try:
-                        answer = imagenary_helper_visaug(self.client, prompts, vis)
-                        print("aug_prompt:", answer)
-                    except:
-                        print("error, try again .....................................................")
-                        time.sleep(5)
-                        continue
-                    pattern = r"\*\*Enhancement Description\*\*:\s*(.*?)(?=\n|\Z)"
-                    match = re.search(pattern, answer, re.DOTALL)
-                    if match:
-                        text_prompt_extend = match.group(1).strip()
-                        break
-                    else:
-                        continue
-            else: 
-                while True:
-                    try:
-                        text_prompt_extend = imagenary_helper(self.client, prompts)
-                        break
-                    except:
-                        print("error, try again .....................................................")
-                        time.sleep(5)
-                        continue
+            if text_aug:
+                if vis:
+                    while True:
+                        try:
+                            answer = imagenary_helper_visaug(self.client, prompts, vis)
+                            print("aug_prompt:", answer)
+                        except:
+                            print("error, try again .....................................................")
+                            time.sleep(50)
+                            continue
+                        pattern = r"\*\*Enhancement Description\*\*:\s*(.*?)(?=\n|\Z)"
+                        match = re.search(pattern, answer, re.DOTALL)
+                        if match:
+                            text_prompt_extend = match.group(1).strip()
+                            break
+                        else:
+                            continue
+                else: 
+                    while True:
+                        try:
+                            text_prompt_extend = imagenary_helper(self.client, prompts)
+                            break
+                        except:
+                            print("error, try again .....................................................")
+                            time.sleep(50)
+                            continue
+            else:
+                text_prompt_extend = prompts
             
-            best_pos, top_k_positions, top_k_similarity = self.memory.voxel_localized(text_prompt_extend)
+            best_pos, top_k_positions, top_k_similarity = self.memory.voxel_localized(text_prompt_extend, region_radius=region_radius, curr_grid=curr_grid)
+
+        elif isinstance(prompts, list):
+            print("search voxel memory...")
+            while True:
+                try:
+                    text_prompt_extend = imagenary_helper_long_text(self.client, prompts)
+                    break
+                except:
+                    print("error, try again .....................................................")
+                    time.sleep(50)
+                    continue
+                
+            best_pos, top_k_positions, top_k_similarity = self.memory.voxel_localized(text_prompt_extend, region_radius=region_radius, curr_grid=curr_grid)
 
         else:
             print("search voxel memory using image observ...")
-            best_pos, top_k_positions, top_k_similarity = self.memory.voxel_localized(prompts)
+            best_pos, top_k_positions, top_k_similarity = self.memory.voxel_localized(prompts, region_radius=region_radius, curr_grid=curr_grid)
             
         cluster_centers, _, _ = self.weighted_cluster_centers(top_k_positions, top_k_similarity)
         print("Extracted Loc Array using voxel memory:", cluster_centers)  
 
         if isinstance(prompts, str):
+            if len(prompts) > 64:
+                prompts = prompts[:64]
             np.save(self.memory.memory_save_path + f"/best_pos_topK_{prompts}.npy", np.array(top_k_positions))
             np.save(self.memory.memory_save_path + f"/best_pos_centers_{prompts}.npy", np.array(cluster_centers))
 
@@ -496,8 +633,6 @@ class GESObjectNavRobot:
 
     # 🙀 定位到execute_path使用save_img_list=True出现内存泄露
     def check_around(self, prompt, max_around=2):
-        if self.task == 'imgnav':
-            max_around = 1 # imgnav don't use look up down
         for j in range(max_around):
             action_around = ['turn_left'] * int(360 / self.memory.args.turn_left)
             self.execute_path(action_around, save_img_list=True)
@@ -576,9 +711,10 @@ class GESObjectNavRobot:
                     succeed_answer = succeed_determine_singleview_with_imggoal(self.client, prompt, obss) 
             except:
                 print("error, try again .....................................................")
-                time.sleep(5)
+                time.sleep(50)
                 continue
-
+            
+            self.agent_response_log.append(succeed_answer)
             print(succeed_answer)
             match = self.pattern_unsuccess.search(succeed_answer)
             
@@ -615,12 +751,13 @@ class GESObjectNavRobot:
                 cv2.waitKey(1)
             if not self.memory.args.quite:
                 print("action:", action)
+            self.state_hist.append(self.benchmark_env.sim.agents[0].get_state())
             self.curr_obs = self.benchmark_env.step(action)
             # if action not in ['stop', 'look_up', 'look_down']:
             #     obs = self.memory.Env.sims.step(action)
             if not self.memory.args.no_record:
                 self.episode_images.append(self.curr_obs["rgb"].copy())
-                self.episode_topdowns.append(adjust_topdown(self.benchmark_env.get_metrics().copy()))
+                self.episode_topdowns.append(adjust_topdown(self.benchmark_env.get_metrics().copy(), self.memory.args))
 
             if save_img_list:
                 img = Image.fromarray(self.curr_obs["rgb"][:, :, :3])
@@ -629,38 +766,80 @@ class GESObjectNavRobot:
         agent_state = self.benchmark_env.sim.agents[0].get_state()
         self.memory.Env.agent.set_state(agent_state)
 
+    def save_log(self):
+        
+        # 由于 AgentState 类型无法直接被 JSON 序列化，这里需要将 state_hist 和 agent_response_log 中的每个元素转换为可序列化的格式
+        def to_serializable(obj):
+            # 针对 AgentState 类型，尝试提取其属性为 dict
+            if hasattr(obj, '__dict__'):
+                # 只保留常见的可序列化字段
+                return {k: to_serializable(v) for k, v in obj.__dict__.items() if not callable(v) and not k.startswith('_')}
+            elif isinstance(obj, (list, tuple)):
+                return [to_serializable(i) for i in obj]
+            elif isinstance(obj, dict):
+                return {k: to_serializable(v) for k, v in obj.items()}
+            elif isinstance(obj, (int, float, str, bool)) or obj is None:
+                return obj
+            elif hasattr(obj, 'tolist'):  # 处理 numpy/tensor
+                return obj.tolist()
+            else:
+                return str(obj)  # 兜底转为字符串
+
+        serializable_state_hist = to_serializable(self.state_hist)
+        serializable_agent_response_log = to_serializable(self.agent_response_log)
+        serializable_loc_hist = to_serializable(self.loc_hist)
+
+        save_data = {
+            'state_hist': serializable_state_hist,
+            'agent_response_log': serializable_agent_response_log,
+            'loc_hist': serializable_loc_hist
+        }
+        save_path = os.path.join(self.log_dir, 'log_data.json')
+
+        with open(save_path, 'w', encoding='utf-8') as f:
+            json.dump(save_data, f, ensure_ascii=False, indent=4)
+    
+        # for i in range(len(self.episode_images)):
+        #     cv2.imwrite(os.path.join(self.log_dir+'_images', f'episode_image_{i}.png'), self.episode_images[i])
+        #     cv2.imwrite(os.path.join(self.log_dir+'_topdowns', f'episode_topdown_{i}.png'), self.episode_topdowns[i])
+
+
     def move2textprompt(self, text_prompt):
         
         self.curr_obs = self.benchmark_env.sim.get_sensor_observations(0)
         self.task_over = False
         # Step 1: Attempt long-term memory retrieval
-        best_poses = self.long_term_memory_retrival_v2(text_prompt)
-        if best_poses is not None:
-            for best_pos in best_poses:
-                self.nav_log['long_memory_query'] += 1
-                self.nav_log['search_point'] += 1
-                best_pos = self._grid2loc(best_pos)
-                try:
-                    path, self.goal = self.memory.Env.move2point(best_pos)
-                    if len(path) > 2000:
-                        print("path too long, skip")
+        if not self.memory.args.use_only_working_memory:
+            best_poses = self.long_term_memory_retrival_v2(text_prompt)
+            if best_poses is not None:
+                self.loc_hist['long_memory'].extend(best_poses)
+                for best_pos in best_poses:
+                    self.nav_log['long_memory_query'] += 1
+                    self.nav_log['search_point'] += 1
+                    best_pos = self._grid2loc(best_pos)
+                    try:
+                        path, self.goal = self.memory.Env.move2point(best_pos)
+                        if len(path) > 2000:
+                            print("path too long, skip")
+                            continue
+                        else:
+                            self.execute_path(path[:-1])
+                    except Exception as e:
+                        print(f"move2point failed: {e}")
                         continue
-                    else:
-                        self.execute_path(path[:-1])
-                except Exception as e:
-                    print(f"move2point failed: {e}")
-                    continue
 
-                self.check_around(text_prompt) 
+                    self.check_around(text_prompt) 
 
-                if self.task_over:
-                    self.execute_path(['stop'])
-                    return self.episode_images, self.episode_topdowns
+                    if self.task_over:
+                        self.execute_path(['stop'])
+                        self.save_log()
+                        return self.episode_images, self.episode_topdowns, self.episode_vedio
 
         # Step 2: Attempt working memory retrieval if long-term retrieval fails
         best_poses = self.working_memory_retrival(text_prompt)
         query_num = min(len(best_poses[0]), 3)
         if best_poses is not None:
+            self.loc_hist['working_memory'].extend(best_poses[0][:query_num])
             for best_pos in best_poses[0][:query_num]:
                 self.nav_log['working_memory_query'] += 1
                 self.nav_log['search_point'] += 1
@@ -680,14 +859,15 @@ class GESObjectNavRobot:
 
                 if self.task_over:
                     self.execute_path(['stop'])
-                    return self.episode_images, self.episode_topdowns
+                    self.save_log()
+                    return self.episode_images, self.episode_topdowns, self.episode_vedio
                 else:
                     continue
 
         # self.touching_goal(text_prompt, [Image.fromarray(self.curr_obs["rgb"][:, :, :3])], max_steps=10)
         self.execute_path(['stop'])
-        
-        return self.episode_images, self.episode_topdowns
+        self.save_log()
+        return self.episode_images, self.episode_topdowns, self.episode_vedio
     
     def move2imgprompt(self, obs):
         self.curr_obs = self.benchmark_env.sim.get_sensor_observations(0)
@@ -696,6 +876,7 @@ class GESObjectNavRobot:
         best_poses = self.working_memory_retrival(obs)
         query_num = min(len(best_poses[0]), 3)
         if best_poses is not None:
+            self.loc_hist['working_memory'].extend(best_poses[0][:query_num])
             for best_pos in best_poses[0][:query_num]:
                 self.nav_log['working_memory_query'] += 1
                 self.nav_log['search_point'] += 1
@@ -715,14 +896,16 @@ class GESObjectNavRobot:
 
                 if self.task_over:
                     self.execute_path(['stop'])
-                    return self.episode_images, self.episode_topdowns
+                    self.save_log()
+                    return self.episode_images, self.episode_topdowns, self.episode_vedio
                 else:
                     continue
 
         # self.touching_goal(text_prompt, [Image.fromarray(self.curr_obs["rgb"][:, :, :3])], max_steps=10)
         self.execute_path(['stop'])
+        self.save_log()
         
-        return self.episode_images, self.episode_topdowns
+        return self.episode_images, self.episode_topdowns, self.episode_vedio
     
 
     def move2NaturalLanguageprompt(self, text_prompt):
@@ -732,6 +915,7 @@ class GESObjectNavRobot:
         best_poses = self.working_memory_retrival(text_prompt, vis_aug=False)
         query_num = min(len(best_poses[0]), 5)
         if best_poses is not None:
+            self.loc_hist['working_memory'].extend(best_poses[0][:query_num])
             for best_pos in best_poses[0][:query_num]:
                 self.nav_log['working_memory_query'] += 1
                 self.nav_log['search_point'] += 1
@@ -751,15 +935,189 @@ class GESObjectNavRobot:
 
                 if self.task_over:
                     self.execute_path(['stop'])
-                    return self.episode_images, self.episode_topdowns
+                    self.save_log()
+                    return self.episode_images, self.episode_topdowns, self.episode_vedio
+                else:
+                    continue
+
+        # self.touching_goal(text_prompt, [Image.fromarray(self.curr_obs["rgb"][:, :, :3])], max_steps=10)
+        
+        self.execute_path(['stop'])
+        self.save_log()
+        
+        return self.episode_images, self.episode_topdowns, self.episode_vedio
+
+    def move2text_attributes_prompt(self, goal_text_intrinsic, goal_text_extrinsic):
+        self.curr_obs = self.benchmark_env.sim.get_sensor_observations(0)
+        self.task_over = False
+        text_prompt = [goal_text_intrinsic, goal_text_extrinsic]
+        self.agent_response_log.append(text_prompt)
+        
+        best_poses = self.working_memory_retrival(text_prompt, vis_aug=False)
+        query_num = min(len(best_poses[0]), 5)
+        if best_poses is not None:
+            self.loc_hist['working_memory'].extend(best_poses[0][:query_num])
+            for best_pos in best_poses[0][:query_num]:
+                self.nav_log['working_memory_query'] += 1
+                self.nav_log['search_point'] += 1
+                best_pos = self._grid2loc(best_pos)
+                try:
+                    path, self.goal = self.memory.Env.move2point(best_pos)
+                    if len(path) > 2000:
+                        print("path too long, skip")
+                        continue
+                    else:
+                        self.execute_path(path[:-1])
+                except Exception as e:
+                    print(f"move2point failed: {e}")
+                    continue
+                
+                self.check_around(text_prompt[0])
+
+                if self.task_over:
+                    self.execute_path(['stop'])
+                    self.save_log()
+                    return self.episode_images, self.episode_topdowns, self.episode_vedio
                 else:
                     continue
 
         # self.touching_goal(text_prompt, [Image.fromarray(self.curr_obs["rgb"][:, :, :3])], max_steps=10)
         self.execute_path(['stop'])
-        
-        return self.episode_images, self.episode_topdowns
+        self.save_log()
+        return self.episode_images, self.episode_topdowns, self.episode_vedio
 
+
+    def move2subgoal(self, best_poses, text_prompt):
+        query_num = min(len(best_poses[0]), 2)
+        if best_poses is not None:
+            for best_pos in best_poses[0][:query_num]:
+                self.nav_log['working_memory_query'] += 1
+                self.nav_log['search_point'] += 1
+                best_pos = self._grid2loc(best_pos)
+                try:
+                    path, self.goal = self.memory.Env.move2point(best_pos)
+                    if len(path) > 2000:
+                        print("path too long, skip")
+                        continue
+                    else:
+                        self.execute_path(path[:-1])
+                except Exception as e:
+                    print(f"move2point failed: {e}")
+                    continue
+                
+                self.check_around(text_prompt)
+
+                if self.task_over:
+                    return True
+                else:
+                    continue
+        return False
+
+    def move2textprompt_adaptive_region(self, text_prompt, text_aug=False, ridus=30):
+        self.task_over = False
+
+        curr_state = self.benchmark_env.sim.agents[0].get_state().position
+        curr_grid = self._loc2grid(curr_state)
+
+        for i in range(3):
+            best_poses = self.working_memory_retrival(text_prompt, region_radius=ridus, text_aug=text_aug, curr_grid=curr_grid)
+            # 按照与curr_grid的距离对best_poses排序，最近的排在最前面
+            if best_poses is not None and len(best_poses) > 1:
+                distances = np.linalg.norm(best_poses - np.array(curr_grid), axis=1)
+                sorted_indices = np.argsort(distances)
+                best_poses = best_poses[sorted_indices]
+                
+            success = self.move2subgoal(best_poses, text_prompt)
+            if success:
+                return True
+            else:
+                ridus += 10
+            
+        return False
+        
+    def move2VLNprompt(self, text_prompt):
+        self.curr_obs = self.benchmark_env.sim.get_sensor_observations(0)
+        self.task_over = False
+        self.agent_response_log.append(text_prompt)
+        subgoals = None
+        while subgoals is None:
+            subgoals = vln_subgoal_planner_with_obs(self.client, text_prompt)
+        # subgoal = '1. Move to {the stairs at the end of the hallway}  \n2. Move to {the bed in the bedroom}  \n3. Move to {the closet}  \n4. Move to {the toilet in the bathroom}  '
+        # we need text in {}
+        self.agent_response_log.append(subgoals)
+        subgoals_list = []
+        for subgoal in subgoals.split('\n'):
+            subgoal = subgoal.split('.')[1].strip()
+            subgoal = subgoal.split('{')[1].split('}')[0].strip()
+            subgoals_list.append(subgoal)
+        print(subgoals_list)
+        for subgoal in subgoals_list:
+            print("move to subgoal:", subgoal)
+            self.execute_path(['turn_left']*(360 // self.memory.args.turn_left), save_img_list=True)
+            # chosen self.obss each 9 images
+            # obss = self.obss[::9]
+            anchor = vln_anchor_planner_v2(self.client, subgoal, self.obss)
+            self.agent_response_log.append(anchor)
+            # anchor = anchor.split('Anchor Object:')[1].strip()
+            print("anchor:", anchor)
+            success = self.move2textprompt_adaptive_region(anchor, text_aug=False, ridus=50)
+            if success:
+                continue
+            else:
+                print("failed to move to subgoal")
+                # try:
+                #     best_poses = self.working_memory_retrival(subgoals_list[-1], region_radius=np.inf, text_aug=False)
+                #     success = self.move2subgoal(best_poses, subgoals_list[-1])
+                #     break
+                # except:
+                #     print("move2subgoal failed, try again")
+                #     break
+        
+        self.execute_path(['stop'])
+        self.save_log()
+        return self.episode_images, self.episode_topdowns, self.episode_vedio
+    
+
+    def move2VLNprompt_v2(self, text_prompt):
+        self.curr_obs = self.benchmark_env.sim.get_sensor_observations(0)
+        self.task_over = False
+
+        self.execute_path(['turn_left']*(360 // self.memory.args.turn_left), save_img_list=True)
+        obss = self.obss[::9]
+        anchor = vln_anchor_planner_v2(self.client, text_prompt, obss)
+        anchor = anchor.split('Anchor Object:')[1].strip()
+        print(anchor)
+        success = self.move2textprompt_adaptive_region(anchor, text_aug=False, ridus=70)
+        # best_poses = self.working_memory_retrival(anchor, region_radius=np.inf, vis_aug=False, text_aug=False)
+        # query_num = min(len(best_poses[0]), 5)
+        # if best_poses is not None:
+        #     for best_pos in best_poses[0][:query_num]:
+        #         self.nav_log['working_memory_query'] += 1
+        #         self.nav_log['search_point'] += 1
+        #         best_pos = self._grid2loc(best_pos)
+        #         try:
+        #             path, self.goal = self.memory.Env.move2point(best_pos)
+        #             if len(path) > 2000:
+        #                 print("path too long, skip")
+        #                 continue
+        #             else:
+        #                 self.execute_path(path[:-1])
+        #         except Exception as e:
+        #             print(f"move2point failed: {e}")
+        #             continue
+                
+        #         self.check_around(anchor)
+
+        #         if self.task_over:
+        #             self.execute_path(['stop'])
+        #             return self.episode_images, self.episode_topdowns, self.episode_vedio
+        #         else:
+        #             continue
+
+        # self.touching_goal(text_prompt, [Image.fromarray(self.curr_obs["rgb"][:, :, :3])], max_steps=10)
+        self.execute_path(['stop'])
+        
+        return self.episode_images, self.episode_topdowns, self.episode_vedio
 
     def keyboard_explore(self):
         last_action = None
@@ -795,15 +1153,22 @@ class GESObjectNavRobot:
             agent_state = self.benchmark_env.sim.agents[0].get_state()
             print("agent_state: position", agent_state.position, "rotation", agent_state.rotation)
 
-            state = Robot.benchmark_env.sim.agents[0].state
-            current_island = Robot.benchmark_env.sim.pathfinder.get_island(state.position)
+            state = self.benchmark_env.sim.agents[0].state
+            current_island = self.benchmark_env.sim.pathfinder.get_island(state.position)
             print("current_island:", current_island)
 
+            self.episode_images.append(obs["rgb"].copy())
+            self.episode_topdowns.append(adjust_topdown(self.benchmark_env.get_metrics().copy(), self.memory.args))
+
+        self.execute_path(['stop'])
+        return self.episode_images, self.episode_topdowns, self.episode_vedio
+        
+    
 
 
 if __name__ == "__main__":
 
-    csv_path = "objnav_hm3d_v1_results.csv"
+    csv_path = "objnav_mp3d_v2_results_forfig.csv"
     args = get_args()
 
     dinov2 = torch.hub.load('facebookresearch/dinov2', args.dino_size, source='github').to('cuda')
@@ -839,6 +1204,7 @@ if __name__ == "__main__":
         os.makedirs(dir, exist_ok=True)
         fps_writer = imageio.get_writer("%s/fps.mp4"%dir, fps=4)
         topdown_writer = imageio.get_writer("%s/metric.mp4"%dir,fps=4)
+        task_vedio_writer = imageio.get_writer("%s/vedio.mp4"%dir,fps=8)
 
         # memory create (if not exsit)
         current_scense = Path(Robot.benchmark_env.current_episode.scene_id).parent.name
@@ -847,7 +1213,7 @@ if __name__ == "__main__":
         current_island = Robot.benchmark_env.sim.pathfinder.get_island(state.position)
         area_shape = Robot.benchmark_env.sim.pathfinder.island_area(current_island)
 
-        memory_path = f'{args.memory_path}/objectnav/{args.benchmark_dataset}_v1/{current_scense}_island_{current_island}'
+        memory_path = f'{args.memory_path}/objectnav/{args.benchmark_dataset}_v2/{current_scense}_island_{current_island}'
         
         
         Robot.memory.args.dataset = args.benchmark_dataset
@@ -864,10 +1230,10 @@ if __name__ == "__main__":
             Robot.memory.create_memory()
 
         # perform task
-        Robot.reset(obs)
+        Robot.reset(obs, dir)
         # Robot.keyboard_explore()
         print(f"find {Robot.benchmark_env.current_episode.object_category}")
-        episode_images, episode_topdowns = Robot.move2textprompt(f'a {habitat_benchmark_env.current_episode.object_category}')
+        episode_images, episode_topdowns, episode_vedio = Robot.move2textprompt(f'a {habitat_benchmark_env.current_episode.object_category}')
         
         for image,topdown in zip(episode_images,episode_topdowns):
             fps_writer.append_data(image)

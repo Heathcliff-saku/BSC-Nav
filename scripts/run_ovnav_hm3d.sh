@@ -14,7 +14,7 @@ while [ $retry_count -lt $MAX_RETRIES ]; do
     python -u "$PYTHON_SCRIPT" --no_record --no_vis --load_single_floor \
     --dataset 'hm3d' --benchmark_dataset 'hm3d' \
     --HM3D_CONFIG_PATH '/home/orbit/桌面/Nav-2025/third-party/habitat-lab/habitat-lab/habitat/config/benchmark/nav/objectnav/ovon_hm3d.yaml' \
-    --HM3D_EPISODE_PREFIX '/home/orbit/桌面/Nav-2025/data_episode/ovnav/hm3d/hm3d/val_unseen/val_unseen_hard.json.gz' \
+    --HM3D_EPISODE_PREFIX '/home/orbit/桌面/Nav-2025/data_episode/ovnav/hm3d/hm3d/val_seen/val_seen.json.gz' \
     --eval_episodes 1000 "$@" > "$LOG_FILE" 2>&1
     
     # 检查脚本退出状态

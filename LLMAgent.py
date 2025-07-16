@@ -3,7 +3,7 @@ import json
 from io import BytesIO
 import base64
 from PIL import Image
-from qwen_vl_utils import process_vision_info
+# from qwen_vl_utils import process_vision_info
 
 
 def imagenary_helper_visaug(client, text_prompt, vis):
@@ -141,6 +141,69 @@ def imagenary_helper(client, text_prompt):
         ])
     
     return completion.choices[0].message.content
+
+def imagenary_helper_long_text(client, text_prompt):
+    goal_text_intrinsic, goal_text_extrinsic = text_prompt[0], text_prompt[1]
+    completion = client.chat.completions.create(
+      model="gpt-4o",
+      timeout=500,
+      messages=[
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": f"""
+          You are an expert in refining and elaborating simple scene or object descriptions for use in text-to-image generation. 
+
+          Your task is to reasonably merge the text description of the object instance and the text description of the surrounding environment, and output a complete description text to guide a text-to-image model to generate a photo of the object. It is crucial that the instance object(s) remain the visual focal point. To achieve these, you should:
+
+          1.**Expand on the Original Description**: Based on the original object description and environment description, you should provides a more fine-grained description of materials, colors, and textures.
+
+          2.**Maintain Visual Dominance**: Ensure that any additional context or setting you provide does not overshadow the main elements described in the original text. the main object should remain the most prominent features of the resulting image.
+
+          **Output Requirements:**
+
+          1.Provide a refined, detailed description in English.
+
+          2.Ensure the enhancements create a vivid, coherent, and inviting scene that supports the original description.
+
+          3.Avoid overly intricate storytelling or elements that distract from the original object or scene.
+
+          4.The extended description must follow the original description and not contradict it, such as color, material, and appearance.
+
+          4.Please avoid overly long descriptions, limit descriptions to 70 words or less.
+                    
+          **Guidelines for Creating Enhanced Descriptions:**
+
+          1.**Detailing**: Incorporate sensory details such as color, texture, lighting, and reflections.
+
+          2.**Contextual Elements**: Add subtle background elements or environmental details that complement but do not compete with the main subject.
+
+          3.**Focus Phrasing**: Use language that naturally draws attention to the original object(s) (e.g., “centered,” “prominently placed,” “serving as the focal point”).
+
+          4.**Balance**: Maintain a balance between enrichment and simplicity. The primary object or scene described in the original prompt should always dominate the final image.
+        """
+        },
+        {"role": "user", "content": f"""
+
+          **Examples**:
+
+          "intrinsic_attributes": "According to the image description, this chair is an old wooden structure with blue seat cushions. Its specific material and color cannot be determined because there are no other details provided about its body or frame."
+
+          "extrinsic_attributes": "There are no other objects around the chair in this image. Only a very simple environment is shown, with only one object: an old wooden table and four blue chairs."
+
+          Enhanced Description Output:
+          A weathered wooden chair with a timeworn frame and soft blue cushions sits prominently at the center. The rich grain of the wood contrasts with the smooth fabric, which shows subtle signs of wear. The surroundings are minimal, featuring a matching wooden table and four identical blue chairs, creating a serene and uncomplicated environment where the chair remains the clear focal point. The warm, natural light highlights the texture of the wood and fabric.
+                            
+        """
+        },
+        {"role": "user", "content": f"""
+         Now, the "intrinsic_attributes" is "{goal_text_intrinsic}", the "extrinsic_attributes" is "{goal_text_extrinsic}", please follow the above requirements and examples to enhance this description, and directly output the enhanced description.
+        """
+        },
+        
+        ])
+    
+    return completion.choices[0].message.content
+
+
 
 def long_memory_localized(client, text_prompt, long_memory):
     
@@ -532,5 +595,397 @@ def touching_helper(client, text_prompt, obss, model=None, processor=None):
   timeout=500,
   messages=messages
   )
+
+  return completion.choices[0].message.content
+
+
+
+
+def vln_subgoal_planner_with_obs(client, text_prompt):
+
+  messages = [
+    {"role": "system", "content": "You are a helpful assistant."},
+    {"role": "user", "content": [ 
+      
+      {
+        "type": "text",  "text":                        
+        """
+        You will get a text instruction for long-distance navigation in an indoor environment. 
+        Now, your task is to decompose the text instruction into reasonable and clear sub-task goals to help the agent complete the complex navigation task step by step. All sub-tasks need to be expressed in the form of "{move to ...}", where the target in {...} can be a word or description of an object, or a description of a room area. 
+        Next, I will give you some examples:
+
+        **Text prompt:**
+        "Walk into the hallway and at the top of the stairs turn left and walk into the bedroom. Walk past the right side of the bed and turn right into the closet and all the way through to the bathroom. Stop in front of the toilet in the bathroom."
+        
+        **Response:**
+        1. Move to the {stairs at the end of the hallway}
+        2. Move to the {bed in the bedroom}
+        3. Move to the {closet}
+        4. Move to the {toilet in the bathroom}
+
+        **Text prompt:**
+        "Go to the wooden stairs. Go up the stairs and go between the couch and the table. Walk into the house through the sliding glass door. Go to the television. Go to the refrigerator. Go to the front of the toaster and stop"
+        
+        **Response:**
+        1. Move to the {wooden stairs}
+        2. Move to the {area between a couch and a table}
+        3. Move to the {sliding glass door}
+        4. Move to the {television}
+        5. Move to the {refrigerator}
+        6. Move to the {toaster}
+
+        Now, please planning the following text prompt into sub-goals and respond strictly in the specified format. Do not include any other information.
+        """
+      },
+      {
+         "type": "text", "text": f"**Text prompt:** {text_prompt}"
+      },                    
+    
+    ],
+    }
+    ]
+  
+    
+  completion = client.chat.completions.create(
+  model="gpt-4o",
+  timeout=500,
+  messages=messages
+  )
+
+
+  return completion.choices[0].message.content
+
+
+
+def vln_subgoal_planner_no_object(client, text_prompt):
+    
+  messages = [
+    {"role": "system", "content": "You are a helpful assistant."},
+    {"role": "user", "content": [ 
+      
+      {
+        "type": "text",  "text":                        
+        """
+        You will get a text instruction for long-distance navigation in an indoor environment. 
+        Now, your task is to decompose the text instruction into reasonable and clear sub-task goals to help the agent complete the complex navigation task step by step. 
+        Next, I will give you some examples, the sub-task must in the format of "{...}":
+
+        **Text prompt:**
+        "Walk into the hallway and at the top of the stairs turn left and walk into the bedroom. Walk past the right side of the bed and turn right into the closet and all the way through to the bathroom. Stop in front of the toilet in the bathroom."
+        
+        **Response:**
+        1. {walk into the hallway and at the top of the stairs.}
+        2. {turn left and walk into the bedroom.}
+        3. {walk past the right side of the bed}
+        4. {turn right into the closet and all the way through to the bathroom.}
+        5. {Stop in front of the toilet in the bathroom}
+
+        **Text prompt:**
+        "Go to the wooden stairs. Go up the stairs and go between the couch and the table. Walk into the house through the sliding glass door. Go to the television. Go to the refrigerator. Go to the front of the toaster and stop"
+        
+        **Response:**
+        1. {go to the wooden stairs}
+        2. {go up the stairs}
+        3. {go between the couch and the table}
+        4. {walk into the house through the sliding glass door}
+        5. {go to the television}
+        6. {go to the refrigerator}
+        7. {go to the front of the toaster and stop}
+
+        Now, please planning the following text prompt into sub-goals and respond strictly in the specified format. Do not include any other information.
+        """
+      },
+      {
+         "type": "text", "text": f"**Text prompt:** {text_prompt}"
+      },
+                             
+    
+    ],
+    }
+    ]
+
+  completion = client.chat.completions.create(
+  model="gpt-4o",
+  timeout=500,
+  messages=messages
+  )
+
+
+  return completion.choices[0].message.content
+
+
+def vln_anchor_planner(client, text_prompt, obss):
+  base64_image = image_to_base64(obss)
+  
+  messages = [
+    {"role": "system", "content": "You are a helpful assistant."},
+    {"role": "user", "content": [ 
+      
+      {
+        "type": "text",  "text":                        
+        """
+        You will act as an intelligent assistant to complete a scene navigation task. You need to analyze the provided observation images and determine the most appropriate direction of movement based on the given navigation instructions. Once the direction is determined, you need to use the corresponding image to predict and describe any important objects or environmental features that you will encounter at the destination. Your description should use natural language and provide detailed descriptions of the object's external features (texture, shape, etc.). If no obvious object is found, you should describe the surrounding environment and any significant structures or markers within it.
+
+        Here are the task breakdown steps you need to follow:
+
+        Direction Determination: Based on the navigation instruction, you need to choose the correct directional image from the provided images. This direction should be derived from the images provided and must be a logical response to the instruction.
+
+        Object Analysis: After determining the correct directional image, analyze the image to identify what "anchor objects" you will encounter at the destination. Anchor objects represent the physical objects you will encounter when following the abstract instruction. An anchor object can be any object, such as a piece of furniture, a notable landmark, or any other clearly identifiable structure. You should provide a detailed natural language description of the anchor object, including its appearance, such as shape, color, texture, and any other notable features. If no obvious object is found in the selected direction, try to describe the appearance of the destination. This might include the terrain, nearby notable structures, or any significant features.
+
+        Output Response: Finally, you need to return your analysis results and provide the anchor object description.
+
+        Here is an example. You must strictly follow the format of the following response:
+
+        Instruction: "Walk straight through the bathroom and exit."
+
+        Your Response should be in the following format:
+        
+        Analysis: (your analysis here)
+
+        Anchor Object: e.g., A large marble sink with gold-trimmed faucets. The sink is rectangular, with polished white marble and faint gray veining running across its surface. Above the sink, there's a framed mirror with an ornate golden frame.
+
+        Now, please start your analysis based on the following input information:
+        """
+      },
+      {
+         "type": "text", "text": f"**Instruction:** {text_prompt}"
+      },
+      {
+         "type": "text", "text": f"**Observation images:**"
+      }
+    
+    ],
+    }
+    ]
+  
+  for idx, base64_image in enumerate(base64_image):
+      messages[1]["content"].extend([
+          {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}}
+      ])
+    
+  completion = client.chat.completions.create(
+  model="gpt-4o",
+  timeout=500,
+  messages=messages
+  )
+
+
+  return completion.choices[0].message.content
+
+
+
+
+
+def vln_anchor_planner_v2(client, text_prompt, obss):
+  base64_image = image_to_base64(obss)
+  
+  messages = [
+    {"role": "system", "content": "You are a helpful assistant."},
+    {"role": "user", "content": [ 
+      
+      {
+        "type": "text",  "text":                        
+        """
+        You will act as an agent to complete the task of assisting scene navigation. I will provide you with a navigation instruction and a series of current observations. The navigation instruction requires the agent to move from the current position to an "object" not far away. However, the current description of the object is rough and is only a simple category description. 
+
+        Now, your task is to analyze the current observation and then describe the characteristics of the target object in as much detail as possible, including fine-grained elements such as appearance, shape, and texture. You may encounter two situations: 
+
+        1. The target object is within the field of view of the observed image, which indicates that you can make a fine-grained description based on the observation content. 
+
+        2. The target object does not exist in the field of view of the observed image. At this time, you need to associate and infer the possible characteristics of the target object as much as possible based on the indoor environment and surrounding information in the observed image, and give a description.       
+
+        Here is an example. You need to output the description directly without any other analysis or additional responses:
+
+        Input Instruction: 
+
+        "Move to the marble sink in the bathroom."
+
+        Your Response should like:
+
+        "A large marble sink with gold-trimmed faucets. The sink is rectangular, with polished white marble and faint gray veining running across its surface. Above the sink, there's a framed mirror with an ornate golden frame."
+
+        Now, please start your analysis based on the following input information:
+        """
+      },
+      {
+         "type": "text", "text": f"**Instruction:** {text_prompt}"
+      },
+      {
+         "type": "text", "text": f"**Observation images:**"
+      }
+    
+    ],
+    }
+    ]
+  
+  for idx, base64_image in enumerate(base64_image):
+      messages[1]["content"].extend([
+          {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}}
+      ])
+    
+  completion = client.chat.completions.create(
+  model="o3",
+  timeout=500,
+  messages=messages
+  )
+
+
+  return completion.choices[0].message.content
+
+
+
+def EQA_generate_anchor_object(client, text_prompt):
+    messages = [
+      {"role": "system", "content": "You are a helpful assistant."},
+      {"role": "user", "content": [ 
+        
+        {
+          "type": "text",  "text":                        
+          """
+          You will act as an agent to complete the task of assisting scene embodied question answering. I will provide you with a question about the scene. In order to answer this question, we must first navigate to the vicinity of the instance involved in the question.
+
+          Now, your task is to analyze and determine the description of the target instance you need to move to based on the current question, which can include some necessary spatial context, such as what type of room this target instance is in and what clear objects exist around it. If you think it is difficult to infer the exact target instance for the type of question provided, please output "We need to go around and check"
+
+          I will provide you with some examples. You need to output the description directly without including other analysis and additional response content.
+
+          Example 1:
+
+          Question: What is the white object on the wall above the TV?
+
+          Response: Now, we need to go to {A TV mounted on the wall.}
+
+          Example 2:
+
+          Question: What is in between the two picture frames on the blue wall in the living room?
+
+          Response: Now, we need to go to {A blue wall in the living room with two picture frames on it.}
+
+          Example 3:
+
+          Question: What should I do to cool down?
+
+          Response: We need to go around and check.
+
+          Your Turn:
+          """
+        },
+        {
+          "type": "text", "text": f"Question: {text_prompt} Response:"
+        }
+      
+      ],
+      }
+      ]
+    
+      
+    completion = client.chat.completions.create(
+    model="o3-mini",
+    timeout=500,
+    messages=messages
+    )
+
+
+    return completion.choices[0].message.content
+
+
+def EQA_Answer_o3(client, text_prompt, obss):
+  base64_image = image_to_base64(obss)
+  
+  messages = [
+    {"role": "system", "content": "You are a helpful assistant."},
+    {"role": "user", "content": [ 
+      
+      {
+        "type": "text",  "text":                        
+        f"""
+        You are an intelligent question-answering robot. I will ask you some questions about indoor spaces, and you must give answers.
+
+        You will see a set of images collected from the same location. The location of these images is related to the question, and you must carefully reason from them to get the correct answer. If you think there is not enough information to get the answer at that location, please try to guess a close and most likely answer.
+
+        Based on the user query, you must output "text" to answer the question asked by the user. Here are some examples:
+
+        Example1:
+        Question: What is to the left of the mirror?
+        Answer: A plant in a tall vase.
+
+        Example2:
+        Question: Where is the mirror?
+        Answer: Next to the staircase above the dark brown cabinet.
+
+        Your Turn:
+        Question: {text_prompt}
+
+        """
+      },
+      {
+         "type": "text", "text": f"**Observation images:**"
+      }
+    
+    ],
+    }
+    ]
+  
+  for idx, base64_image in enumerate(base64_image):
+      messages[1]["content"].extend([
+          {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}}
+      ])
+    
+  completion = client.chat.completions.create(
+  model="o3-mini",
+  timeout=500,
+  messages=messages
+  )
+
+
+  return completion.choices[0].message.content
+
+def EQA_Answer_4o(client, text_prompt, obss):
+  base64_image = image_to_base64(obss)
+  
+  messages = [
+    {"role": "system", "content": "You are a helpful assistant."},
+    {"role": "user", "content": [ 
+      
+      {
+        "type": "text",  "text":                        
+        f"""
+        You are an intelligent question-answering robot. I will ask you some questions about indoor spaces, and you must give answers.
+
+        You will see a set of images collected from the same space. These observation images is related to the question, and you must carefully reason from them to get the correct answer. Please do not respond with "I can't answer that because I didn't see..." If you think the images are not accurate enough to get an answer, please try to guess the most likely answer.
+
+        Based on the user query, you must output "text" to answer the question asked by the user. Here are some examples:
+
+        Example1:
+        Question: What is to the left of the mirror?
+        Answer: A plant in a tall vase.
+
+        Example2:
+        Question: Where is the mirror?
+        Answer: Next to the staircase above the dark brown cabinet.
+
+        Your Turn:
+        Question: {text_prompt}
+
+        """
+      },
+      {
+         "type": "text", "text": f"**Observation images:**"
+      }
+    
+    ],
+    }
+    ]
+  
+  for idx, base64_image in enumerate(base64_image):
+      messages[1]["content"].extend([
+          {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}}
+      ])
+    
+  completion = client.chat.completions.create(
+  model="gpt-4o",
+  timeout=500,
+  messages=messages
+  )
+
 
   return completion.choices[0].message.content

@@ -12,7 +12,7 @@ from sklearn.cluster import DBSCAN
 
 from LLMAgent import long_memory_localized, imagenary_helper, succeed_determine
 from utils import *
-
+from objnav_benchmark import GESObjectNavRobot
 import habitat_sim.utils.datasets_download
 
 # 🙀1. 完善成功判定，循环 
@@ -378,6 +378,9 @@ class GESNavRobot:
                 self.curr_obs = self.memory.Env.sims.step(action)
                 agent_state = self.memory.Env.agent.get_state()
                 print("agent_state: position", agent_state.position, "rotation", agent_state.rotation)
+
+
+
 
 if __name__ == "__main__":
     

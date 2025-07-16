@@ -34,5 +34,5 @@ def compute_metrics(csv_file):
     print(grouped)
 
 # 示例：调用函数并提供CSV文件路径
-csv_file = 'objnav_hm3d_v2_results.csv'  # 这里需要指定你的CSV文件路径
+csv_file = 'imgnav_hm3d_results.csv'  # 这里需要指定你的CSV文件路径
 compute_metrics(csv_file)

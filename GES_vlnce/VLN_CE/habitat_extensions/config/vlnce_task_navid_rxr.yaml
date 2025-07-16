@@ -1,0 +1,51 @@
+ENVIRONMENT:
+  MAX_EPISODE_STEPS: 500
+SIMULATOR:
+  ACTION_SPACE_CONFIG: v0
+  AGENT_0:
+    SENSORS: [RGB_SENSOR]
+  FORWARD_STEP_SIZE: 0.25
+  TURN_ANGLE: 30
+  HABITAT_SIM_V0:
+    GPU_DEVICE_ID: 0
+    ALLOW_SLIDING: True
+  RGB_SENSOR:
+    WIDTH: 640
+    HEIGHT: 480
+    HFOV: 90
+    TYPE: HabitatSimRGBSensor
+    POSITION: [0, 1.25, 0]
+
+TASK:
+  TYPE: VLN-v0
+  SUCCESS_DISTANCE: 3.0
+  SENSORS: [
+    INSTRUCTION_SENSOR,
+    SHORTEST_PATH_SENSOR
+     ]
+  INSTRUCTION_SENSOR_UUID: instruction
+  POSSIBLE_ACTIONS: [STOP, MOVE_FORWARD, TURN_LEFT, TURN_RIGHT]
+  MEASUREMENTS: [
+    TOP_DOWN_MAP_VLNCE,
+    DISTANCE_TO_GOAL,
+    SUCCESS,
+    SPL,
+    NDTW,
+    PATH_LENGTH,
+    ORACLE_SUCCESS,
+    STEPS_TAKEN
+  ]
+  SUCCESS:
+    SUCCESS_DISTANCE: 3.0
+  SPL:
+    SUCCESS_DISTANCE: 3.0
+  NDTW:
+    GT_PATH: /raid/data/episodes/RxR_VLNCE_v0/{split}/{split}_{role}_gt.json.gz
+DATASET:
+  TYPE: RxR-VLN-CE-v1
+  SPLIT: val_unseen
+  ROLES: [guide]  # "*", "guide", "follower"
+  LANGUAGES: [en-US, en-IN]  #  "*", "te-IN", "hi-IN", "en-US", "en-IN"
+  DATA_PATH: /raid/data/episodes/RxR_VLNCE_v0/{split}/{split}_{role}.json.gz
+  SCENES_DIR: /raid/data/scene_dataset/
+

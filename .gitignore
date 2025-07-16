@@ -3,11 +3,16 @@
 /data_hssd
 /data_episode
 /tmp
+/tmp_img
+/tmp_objnav
+/tmp_ovon
+/tmp_vln
 /log
 /3D-object-asset
 /baselines
 /third-party
 /yolov8x-worldv2.pt
+/GES_vlnce
 *.png
 *.txt
 *.out

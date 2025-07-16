@@ -1,0 +1,2 @@
+from VLN_CE import habitat_extensions
+from VLN_CE import vlnce_baselines

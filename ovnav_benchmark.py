@@ -43,7 +43,7 @@ os.environ["HABITAT_SIM_LOG"] = "quiet"
 
 if __name__ == "__main__":
 
-    csv_path = "ovnav_mp3d_results.csv"
+    csv_path = "ovnav_mp3d_results_forfig.csv"
     args = get_args()
 
     dinov2 = torch.hub.load('facebookresearch/dinov2', args.dino_size, source='github').to('cuda')
@@ -61,7 +61,7 @@ if __name__ == "__main__":
     Robot = GESObjectNavRobot(memory, habitat_benchmark_env) # task ['objnav', 'instance_imgnav','imgnav']
 
     start_episode = get_start_episode(csv_path)
-
+    start_episode = 14
 
     for i in tqdm(range(args.eval_episodes)):
         if i < start_episode:
@@ -104,10 +104,10 @@ if __name__ == "__main__":
             Robot.memory.create_memory()
 
         # perform task
-        Robot.reset(obs)
+        Robot.reset(obs, dir)
         print(f"find {Robot.benchmark_env.current_episode.object_category}")
         # goal_img.show()
-        episode_images, episode_topdowns = Robot.move2NaturalLanguageprompt(f'a {habitat_benchmark_env.current_episode.object_category}')
+        episode_images, episode_topdowns, episode_vedio = Robot.move2NaturalLanguageprompt(f'a {habitat_benchmark_env.current_episode.object_category}')
         
         for image,topdown in zip(episode_images,episode_topdowns):
             fps_writer.append_data(image)

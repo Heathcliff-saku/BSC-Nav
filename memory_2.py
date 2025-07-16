@@ -1,5 +1,5 @@
 import numpy as np
-import pyarrow.feather as feather
+# import pyarrow.feather as feather
 import matplotlib.pyplot as plt
 from matplotlib.colors import Normalize
 import random
@@ -36,7 +36,7 @@ import gc
 from sklearn.cluster import DBSCAN
 
 class VoxelTokenMemory():
-    def __init__(self, args, memory_path=None, init_state=None, build_map=False, preload_dino=None, preload_yolo=None, preload_diffusion=None):
+    def __init__(self, args, memory_path=None, init_state=None, build_map=False, preload_dino=None, preload_yolo=None, need_diffusion=True):
         self.args = args
         self.device = 'cuda'
         if not preload_dino:
@@ -140,8 +140,9 @@ class VoxelTokenMemory():
         self.yolow_results = []
         self.long_memory_dict = []
 
-        self.Quantizing(self.args.diffusion_id)
-        self.diffusion = self.diffusion.to(self.device)
+        if need_diffusion:
+            self.Quantizing(self.args.diffusion_id)
+            self.diffusion = self.diffusion.to(self.device)
 
     def _clear_memory(self):
         """清理内存中的大型数组和对象"""
@@ -559,7 +560,7 @@ class VoxelTokenMemory():
         self.diffusion.enable_model_cpu_offload()
         
     
-    def voxel_localized(self, prompt, K=100, batch_size=300):
+    def voxel_localized(self, prompt, K=100, batch_size=300, region_radius=np.inf, curr_grid=None):
 
         # self.diffusion = StableDiffusion3Pipeline.from_pretrained("stabilityai/stable-diffusion-3.5-medium", torch_dtype=torch.float16)
         if isinstance(prompt, str):
@@ -620,7 +621,14 @@ class VoxelTokenMemory():
             #         candidates.append((batch_max_similarity, pos))
             
             with h5py.File(self.feat_path, 'r') as h5f:
-                group_names = list(h5f.keys())
+                if region_radius != np.inf:
+                    group_names = []
+                    for group_name in h5f.keys():
+                        _, x, y, z = group_name.split('_')
+                        if (int(x) - curr_grid[0]) ** 2 + (int(y) - curr_grid[1]) ** 2 + (int(z) - curr_grid[2]) ** 2 <= region_radius ** 2:
+                            group_names.append(group_name)
+                else:
+                    group_names = list(h5f.keys())
 
                 if self.args.load_single_floor:      
                     print(f'filter height from {self.floor_min_height} to {self.floor_max_height}')  

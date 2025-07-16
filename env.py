@@ -10,21 +10,25 @@ from tqdm import tqdm
 from args import get_args
 from utils import show_obs, keyboard_control_fast
 import cv2
-import habitat
-from habitat.config.read_write import read_write
-from habitat.config.default_structured_configs import (
-    CollisionsMeasurementConfig,
-    FogOfWarConfig,
-    TopDownMapMeasurementConfig,
-)
-from habitat.config.default_structured_configs import LookUpActionConfig,LookDownActionConfig,NumStepsMeasurementConfig
-from habitat.utils.visualizations.maps import colorize_draw_agent_and_fit_to_height
+
 
 import json
 import os
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Sequence
 
 import attr
+
+import habitat
+from habitat.config.read_write import read_write
+from habitat.config.default_structured_configs import (
+    CollisionsMeasurementConfig,
+    FogOfWarConfig,
+    TopDownMapMeasurementConfig,
+    TopDownMapVLNCEMeasurementConfig
+)
+from habitat.config.default_structured_configs import LookUpActionConfig,LookDownActionConfig,NumStepsMeasurementConfig
+from habitat.utils.visualizations.maps import colorize_draw_agent_and_fit_to_height
+
 from habitat.core.registry import registry
 from habitat.core.simulator import AgentState, ShortestPathPoint
 from habitat.core.utils import DatasetFloatJSONEncoder
@@ -40,7 +44,6 @@ from habitat.tasks.nav.object_nav_task import (
 )
 
 from omegaconf import DictConfig
-
 from habitat.sims.habitat_simulator.habitat_simulator import HabitatSim
 
 class NavEnv():
@@ -68,8 +71,8 @@ class NavEnv():
         else:
             random_pt = self.sims.pathfinder.get_random_navigable_point()
             random_pt = self.sims.pathfinder.get_random_navigable_point()
-            random_pt = self.sims.pathfinder.get_random_navigable_point()
-            random_pt = self.sims.pathfinder.get_random_navigable_point()
+            # random_pt = self.sims.pathfinder.get_random_navigable_point()
+            # random_pt = self.sims.pathfinder.get_random_navigable_point()
             # random_pt = self.sims.pathfinder.get_random_navigable_point()
             agent_state.position = random_pt
 
@@ -221,6 +224,12 @@ class NavEnv():
             "turn_right": habitat_sim.agent.ActionSpec(
                 "turn_right", habitat_sim.agent.ActuationSpec(amount=self.args.turn_right)
             ),
+            "look_down": habitat_sim.agent.ActionSpec(
+                "look_down", habitat_sim.agent.ActuationSpec(amount=15)
+            ),
+            "look_up": habitat_sim.agent.ActionSpec(
+                "look_up", habitat_sim.agent.ActuationSpec(amount=15)
+            ),
         }
 
         return habitat_sim.Configuration(sim_cfg, [agent_cfg])
@@ -258,7 +267,7 @@ class NavEnv():
         
         while True:
             show_obs(obs)
-            k, action = keyboard_control_fast()
+            k, action = keyboard_control()
             if k != -1:
                 if action == "stop":
                     break
@@ -474,6 +483,21 @@ def get_ovon_env(args):
     sim = habitat.Env(config)
     return sim
 
+def get_vlnce_env(args):
+
+    # vln_ce (conda activate shouwei-nav-vlnce)
+    from habitat import Env
+    from habitat.utils.visualizations import maps
+    from GES_vlnce.VLN_CE.vlnce_baselines.config.default import get_config
+    from habitat.datasets import make_dataset
+
+    config = get_config(args.MP3D_CONFIG_PATH, opts=None)
+    dataset = make_dataset(id_dataset=config.TASK_CONFIG.DATASET.TYPE, config=config.TASK_CONFIG.DATASET)
+    # dataset_split = dataset.get_splits(args.split_num)[args.split_id]
+
+    sim = Env(config.TASK_CONFIG, dataset)
+    return sim
+
 def hm3d_data_config(args, stage:str='val',
                     episodes=100):
 
@@ -524,7 +548,8 @@ def hm3d_data_config(args, stage:str='val',
         habitat_config.habitat.simulator.agents.main_agent.sim_sensors.depth_sensor.position = [0,args.sensor_height,0]
 
         habitat_config.habitat.simulator.habitat_sim_v0.allow_sliding = True
-        habitat_config.habitat.task.measurements.success.success_distance = args.success_distance
+        if args.nav_task != 'eqa':
+            habitat_config.habitat.task.measurements.success.success_distance = args.success_distance
 
     return habitat_config
 
@@ -542,25 +567,47 @@ def mp3d_data_config(args,stage:str='val',
         habitat_config.habitat.environment.iterator_options.num_episode_sample = episodes
         # habitat_config.habitat.environment.iterator_options.shuffle = False
         habitat_config.habitat.environment.max_episode_steps = args.max_episode_steps
-        habitat_config.habitat.task.measurements.update(
-        {
-            "top_down_map": TopDownMapMeasurementConfig(
-                map_padding=3,
-                map_resolution=1024,
-                draw_source=True,
-                draw_border=True,
-                draw_shortest_path=False,
-                draw_view_points=True,
-                draw_goal_positions=True,
-                draw_goal_aabbs=False,
-                fog_of_war=FogOfWarConfig(
-                    draw=True,
-                    visibility_dist=5.0,
-                    fov=90,
+
+        if args.nav_task != 'vlnce':
+            habitat_config.habitat.task.measurements.update(
+            {
+                "top_down_map": TopDownMapMeasurementConfig(
+                    map_padding=3,
+                    map_resolution=1024,
+                    draw_source=True,
+                    draw_border=True,
+                    draw_shortest_path=False,
+                    draw_view_points=True,
+                    draw_goal_positions=True,
+                    draw_goal_aabbs=False,
+                    fog_of_war=FogOfWarConfig(
+                        draw=True,
+                        visibility_dist=5.0,
+                        fov=90,
+                    ),
                 ),
-            ),
-            "collisions": CollisionsMeasurementConfig(),
-        })
+                "collisions": CollisionsMeasurementConfig(),
+            })
+        else:
+            habitat_config.habitat.task.measurements.update(
+            {
+                "top_down_map": TopDownMapVLNCEMeasurementConfig(
+                    map_padding=3,
+                    map_resolution=1024,
+                    draw_source=True,
+                    draw_border=True,
+                    draw_shortest_path=False,
+                    draw_view_points=True,
+                    draw_goal_positions=True,
+                    draw_goal_aabbs=False,
+                    fog_of_war=FogOfWarConfig(
+                        draw=True,
+                        visibility_dist=5.0,
+                        fov=90,
+                    ),
+                ),
+                "collisions": CollisionsMeasurementConfig(),
+            })
         habitat_config.habitat.simulator.agents.main_agent.sim_sensors.rgb_sensor.hfov = args.image_hfov
         habitat_config.habitat.simulator.agents.main_agent.sim_sensors.depth_sensor.hfov = args.image_hfov
 
@@ -579,7 +626,44 @@ def mp3d_data_config(args,stage:str='val',
         habitat_config.habitat.simulator.agents.main_agent.sim_sensors.depth_sensor.position = [0,args.sensor_height,0]
 
         habitat_config.habitat.simulator.habitat_sim_v0.allow_sliding = True
-        habitat_config.habitat.task.measurements.success.success_distance = args.success_distance
+        if args.nav_task != 'eqa':
+            habitat_config.habitat.task.measurements.success.success_distance = args.success_distance
+    return habitat_config
+
+
+def mp3d_data_config_vln(args,stage:str='val_unseen',
+                    episodes=200):
+
+    habitat_config = habitat.get_config(args.MP3D_CONFIG_PATH)
+
+    with read_write(habitat_config):
+        habitat_config.habitat.dataset.split = stage
+        habitat_config.habitat.dataset.scenes_dir = args.MP3D_SCENE_PREFIX 
+        habitat_config.habitat.dataset.data_path = args.MP3D_EPISODE_PREFIX
+        habitat_config.habitat.simulator.scene_dataset = args.MP3D_SCENE_PREFIX + "/mp3d_annotated_basis.scene_dataset_config.json"
+        habitat_config.habitat.environment.iterator_options.num_episode_sample = episodes
+        # habitat_config.habitat.environment.iterator_options.shuffle = False
+        habitat_config.habitat.environment.max_episode_steps = args.max_episode_steps
+        
+        habitat_config.habitat.simulator.agents.main_agent.sim_sensors.rgb_sensor.hfov = args.image_hfov
+        habitat_config.habitat.simulator.agents.main_agent.sim_sensors.depth_sensor.hfov = args.image_hfov
+
+        habitat_config.habitat.simulator.agents.main_agent.height=1.5
+        habitat_config.habitat.simulator.agents.main_agent.radius=0.1
+
+        habitat_config.habitat.simulator.forward_step_size = args.move_forward
+        habitat_config.habitat.simulator.turn_angle = args.turn_left
+
+        habitat_config.habitat.simulator.agents.main_agent.sim_sensors.rgb_sensor.height = args.height
+        habitat_config.habitat.simulator.agents.main_agent.sim_sensors.rgb_sensor.width = args.width   
+        habitat_config.habitat.simulator.agents.main_agent.sim_sensors.depth_sensor.height = args.height
+        habitat_config.habitat.simulator.agents.main_agent.sim_sensors.depth_sensor.width = args.width 
+
+        habitat_config.habitat.simulator.agents.main_agent.sim_sensors.rgb_sensor.position = [0,args.sensor_height,0]
+        habitat_config.habitat.simulator.agents.main_agent.sim_sensors.depth_sensor.position = [0,args.sensor_height,0]
+
+        habitat_config.habitat.simulator.habitat_sim_v0.allow_sliding = True
+        habitat_config.habitat.task.measurements.success.success_distance = 3.0
     return habitat_config
 
 
@@ -617,7 +701,8 @@ def show_obs(obs):
 if __name__ == "__main__":
     
     args = get_args()
-
+    env = NavEnv(args)
+    env.keyboard_explore()
     # env = NavBenchmarkEnv(args)
     # habitat_env = env.sims
     # evaluation_metrics = []
@@ -659,7 +744,12 @@ if __name__ == "__main__":
     # print(evaluation_metrics)
         
 
-    env = NavEnv(args)
+    # env = NavEnv(args)
     
-    env.keyboard_explore()
+    # env.keyboard_explore()
     # env.move2point(goal=np.array([1.16672724,  3.2034254, -0.4141059]))
+
+    # env = get_vlnce_env(args)
+    # obs = env.reset()
+    # m = env.get_metrics()
+    # print(env)

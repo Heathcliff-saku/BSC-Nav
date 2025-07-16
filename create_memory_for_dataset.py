@@ -30,12 +30,17 @@ from diffusers import StableDiffusion3Pipeline
 from diffusers import BitsAndBytesConfig, SD3Transformer2DModel
 from objnav_benchmark import *
 
+try:
+    from GES_vlnce.env_vlnce import *
+except:
+    pass
+
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 os.environ["MAGNUM_LOG"] = "quiet"
 os.environ["HABITAT_SIM_LOG"] = "quiet"
 
 
-def write_metrics(metrics,path="ovnav_hm3d_metadata.csv"):
+def write_metrics(metrics,path="vlnce_r2r_mp3d_results.csv"):
     if os.path.exists(path):
         with open(path, mode="a", newline="") as csv_file:
             writer = csv.DictWriter(csv_file, fieldnames=metrics.keys())
@@ -56,6 +61,8 @@ if __name__ == "__main__":
     # diffusion = Quantizing(args.diffusion_id).to('cuda')
     if args.nav_task == 'ovon':
         habitat_benchmark_env = get_ovon_env(args)
+    elif args.nav_task == 'vlnce':
+        habitat_benchmark_env = get_vlnce_env(args)
     else:
         habitat_benchmark_env = get_objnav_env(args)
     # habitat_benchmark_env.sim.episode_iterator.set
@@ -81,7 +88,7 @@ if __name__ == "__main__":
             current_island = Robot.benchmark_env.sim.pathfinder.get_island(state.position)
             area_shape = Robot.benchmark_env.sim.pathfinder.island_area(current_island)
             # memory_path = f'{args.memory_path}/objectnav/{args.benchmark_dataset}/{current_scense}_island_{current_island}'
-            memory_path = f'{args.memory_path}/ovnav/{args.benchmark_dataset}/{current_scense}_island_{current_island}'
+            memory_path = f'{args.memory_path}/objectnav/{args.benchmark_dataset}/{current_scense}_island_{current_island}'
 
             Robot.memory.args.random_move_num = int(area_shape / 2) + 1
             Robot.memory.args.dataset = args.benchmark_dataset
@@ -99,6 +106,8 @@ if __name__ == "__main__":
             else:
                 print("creating memory..., random_move_num:", Robot.memory.args.random_move_num)
                 del Robot.memory
+                gc.collect()
+                torch.cuda.empty_cache()
                 Robot.memory = VoxelTokenMemory(args, init_state=state, build_map=True, memory_path=memory_path, preload_dino=dinov2, preload_yolo=yolow)
                 Robot.memory.exploring_create_memory()
 
@@ -121,7 +130,7 @@ if __name__ == "__main__":
                                 'search_point': Robot.nav_log['search_point']
                                     }
             print(habitat_benchmark_env.get_metrics())
-            write_metrics(evaluation_metrics) 
+            # write_metrics(evaluation_metrics) 
             
             del evaluation_metrics
             gc.collect()

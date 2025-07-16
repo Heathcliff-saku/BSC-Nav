@@ -1,0 +1,1295 @@
+[
+  {
+    "question": "What is the white object on the wall above the TV?",
+    "answer": "Air conditioning unit",
+    "category": "object recognition",
+    "question_id": "f2e82760-5c3c-41b1-88b6-85921b9e7b32",
+    "episode_history": "hm3d-v0/000-hm3d-BFRyYbPCCPE",
+    "answer_o3": "A wall-mounted air conditioning unit.",
+    "answer_4o": "The white object on the wall above the TV is an air conditioning unit."
+  },
+  {
+    "question": "What material is the ceiling in the living room?",
+    "answer": "Wood panel",
+    "category": "attribute recognition",
+    "question_id": "7447d782-d1a7-4c87-86dc-b5eafc5a0f76",
+    "episode_history": "hm3d-v0/000-hm3d-BFRyYbPCCPE",
+    "answer_o3": "The living-room ceiling is a smooth, painted drywall/plaster surface.",
+    "answer_4o": "The ceiling in the living room appears to be made of plaster or drywall, painted in a light color."
+  },
+  {
+    "question": "What color is the staircase railing?",
+    "answer": "Brown",
+    "category": "attribute recognition",
+    "question_id": "e2ccf6f4-22a9-47d1-ab8d-a05a13435b82",
+    "episode_history": "hm3d-v0/000-hm3d-BFRyYbPCCPE",
+    "answer_o3": "The staircase railing is dark brown.",
+    "answer_4o": "The staircase railing is dark brown."
+  },
+  {
+    "question": "What is in between the two picture frames on the blue wall in the living room?",
+    "answer": "The TV",
+    "category": "spatial understanding",
+    "question_id": "c841bb52-1cec-46d7-bb83-8c99b5c66fa8",
+    "episode_history": "hm3d-v0/000-hm3d-BFRyYbPCCPE",
+    "answer_o3": "A television.",
+    "answer_4o": "A wall-mounted air conditioning unit."
+  },
+  {
+    "question": "Is there room on the dining table to eat?",
+    "answer": "Yes",
+    "category": "spatial understanding",
+    "question_id": "79344680-6b45-4531-8789-ad0f5ef85b3b",
+    "episode_history": "hm3d-v0/000-hm3d-BFRyYbPCCPE",
+    "answer_o3": "Yes – the table is mostly clear except for placemats and a small centerpiece, so there’s space to eat.",
+    "answer_4o": "There seems to be enough room on the dining table to eat. The table is partially covered with placemats, but overall it appears to be clear enough for dining."
+  },
+  {
+    "question": "Is the dining table set with table mats?",
+    "answer": "Yes.",
+    "category": "object state recognition",
+    "question_id": "500e6924-0ea3-45c8-89ce-db3d37e142bf",
+    "episode_history": "hm3d-v0/000-hm3d-BFRyYbPCCPE",
+    "answer_o3": "Yes, the dining table has table mats on it.",
+    "answer_4o": "Yes, the dining table is set with table mats."
+  },
+  {
+    "question": "Is the front door open?",
+    "answer": "No",
+    "category": "object state recognition",
+    "question_id": "ecad68d2-a16f-4a3e-b8a1-a70ec1c5cf00",
+    "episode_history": "hm3d-v0/000-hm3d-BFRyYbPCCPE",
+    "answer_o3": "No, the front door is closed.",
+    "answer_4o": "No, the front door appears to be closed."
+  },
+  {
+    "question": "What should I do to cool down?",
+    "answer": "Turn on the AC unit",
+    "category": "functional reasoning",
+    "question_id": "5c1d30b9-5827-49fc-b74f-5ee9909a75b8",
+    "episode_history": "hm3d-v0/000-hm3d-BFRyYbPCCPE",
+    "answer_4o": "To cool down, you can use the air conditioning unit located in the room. It is mounted high on a wall painted in teal color, near the seating area."
+  },
+  {
+    "question": "What can I do to increase the speed of the ceiling fan?",
+    "answer": "Turn the dial on the switch panel next to the front door",
+    "category": "functional reasoning",
+    "question_id": "8d7f1dd7-9764-4603-918b-58eefcb0b10e",
+    "episode_history": "hm3d-v0/000-hm3d-BFRyYbPCCPE",
+    "answer_4o": "To increase the speed of the ceiling fan, you can find the switch or pull cord on the fan that allows you to change the speed settings. Alternatively, check if there is a wall control or remote control with speed adjustment options."
+  },
+  {
+    "question": "What type of ceiling is in the living room?",
+    "answer": "A vaulted ceiling",
+    "category": "world knowledge",
+    "question_id": "c8808989-9b62-4764-814e-520fd40c22cd",
+    "episode_history": "hm3d-v0/000-hm3d-BFRyYbPCCPE",
+    "answer_4o": "The living room has a flat ceiling."
+  },
+  {
+    "question": "What is the large, round, and black object on the wall?",
+    "answer": "A clock",
+    "category": "object recognition",
+    "question_id": "0c6b5dce-8baf-4d95-b7ca-26fe915c4bd7",
+    "episode_history": "hm3d-v0/001-hm3d-TPhiubUHKcP",
+    "answer_4o": "A large round black clock."
+  },
+  {
+    "question": "What shape are the door knobs?",
+    "answer": "Round or spherical",
+    "category": "attribute recognition",
+    "question_id": "e816a1f9-af6c-4901-8d54-4ddaa2a60dc3",
+    "episode_history": "hm3d-v0/001-hm3d-TPhiubUHKcP",
+    "answer_4o": "The door knobs are round."
+  },
+  {
+    "question": "What type of flooring does this house feature?",
+    "answer": "Wood panels",
+    "category": "attribute recognition",
+    "question_id": "19baf626-2db5-4fb0-a7ad-02896fa77b18",
+    "episode_history": "hm3d-v0/001-hm3d-TPhiubUHKcP",
+    "answer_4o": "The house features a combination of flooring types: hardwood flooring is visible in several areas such as the kitchen and dining room, while carpeting is used in some other areas like the stairs and certain hallways. Tile is used in bathroom areas."
+  },
+  {
+    "question": "What is to the left of the mirror?",
+    "answer": "A plant in a tall vase",
+    "category": "spatial understanding",
+    "question_id": "b6dcf043-30a6-4b4e-9787-9b29bd1b1703",
+    "episode_history": "hm3d-v0/001-hm3d-TPhiubUHKcP",
+    "answer_4o": "A plant in a tall vase."
+  },
+  {
+    "question": "What is to the left of the staircase?",
+    "answer": "A storage closet",
+    "category": "spatial understanding",
+    "question_id": "5460114d-e885-4eae-8bdc-a273deb3df0a",
+    "episode_history": "hm3d-v0/001-hm3d-TPhiubUHKcP",
+    "answer_4o": "A mirror and a tall vase with decorative branches."
+  },
+  {
+    "question": "Are the cabinets below the mirror closed?",
+    "answer": "Yes.",
+    "category": "object state recognition",
+    "question_id": "d16b6600-beb5-4bf4-8045-d018b75eefb1",
+    "episode_history": "hm3d-v0/001-hm3d-TPhiubUHKcP",
+    "answer_4o": "Yes, the cabinets below the mirror are closed."
+  },
+  {
+    "question": "Is the bedroom door open?",
+    "answer": "Yes",
+    "category": "object state recognition",
+    "question_id": "21f8ed6a-4ca4-465f-986d-c4390984d8a9",
+    "episode_history": "hm3d-v0/001-hm3d-TPhiubUHKcP",
+    "answer_4o": "The bedroom door is open."
+  },
+  {
+    "question": "Where is the mirror?",
+    "answer": "Next to the staircase above the dark brown cabinet",
+    "category": "object localization",
+    "question_id": "501c3264-ca08-487d-a038-0e83968359f6",
+    "episode_history": "hm3d-v0/001-hm3d-TPhiubUHKcP",
+    "extra_answers": [
+      "Next to the staircase",
+      "On the wall near the staircase and the door",
+      "over the drawers in the hallway",
+      "by the stairs"
+    ],
+    "answer_4o": "The mirror is next to the staircase above the dark brown cabinet."
+  },
+  {
+    "question": "What is the green object in the left of the garage?",
+    "answer": "A hose",
+    "category": "object recognition",
+    "question_id": "564d876c-44f1-4915-8d4b-ab5a7728494f",
+    "episode_history": "hm3d-v0/002-hm3d-wcojb4TFT35",
+    "answer_4o": "The green object to the left of the garage is a garden hose coiled on a wall-mounted reel."
+  },
+  {
+    "question": "What is the bin with the yellow lid?",
+    "answer": "A recycling bin",
+    "category": "object recognition",
+    "question_id": "77c6644e-6018-4ef3-a683-276d3d2af67f",
+    "episode_history": "hm3d-v0/002-hm3d-wcojb4TFT35",
+    "answer_4o": "The bin with the yellow lid is a large garbage bin, situated next to another similar bin with a brown lid."
+  },
+  {
+    "question": "What color is the car?",
+    "answer": "Blue",
+    "category": "attribute recognition",
+    "question_id": "a86ef102-5500-4fbf-8fae-cdbeb20a3b7b",
+    "episode_history": "hm3d-v0/002-hm3d-wcojb4TFT35",
+    "answer_4o": "The car is dark blue."
+  },
+  {
+    "question": "What material is the floor?",
+    "answer": "concrete",
+    "category": "attribute recognition",
+    "question_id": "438e8c6f-f27d-4d3d-b13d-6f41c2981c2a",
+    "episode_history": "hm3d-v0/002-hm3d-wcojb4TFT35",
+    "answer_4o": "The floor appears to be made of concrete."
+  },
+  {
+    "question": "What is on the top shelf to the right side of the garage?",
+    "answer": "An ice cooler",
+    "category": "spatial understanding",
+    "question_id": "9b4a7fbb-680d-4e39-8d60-7b1e521f3108",
+    "episode_history": "hm3d-v0/002-hm3d-wcojb4TFT35",
+    "answer_4o": "On the top shelf to the right side of the garage, there is a black bag and a green container."
+  },
+  {
+    "question": "Is the garbage bin open?",
+    "answer": "Yes.",
+    "category": "object state recognition",
+    "question_id": "35bfcf60-4227-4bbb-9213-e1bf643b2325",
+    "episode_history": "hm3d-v0/002-hm3d-wcojb4TFT35",
+    "answer_4o": "No, the garbage bin is not open."
+  },
+  {
+    "question": "Is the house doorway open or closed?q",
+    "answer": "Open",
+    "category": "object state recognition",
+    "question_id": "3a803472-47cd-4903-8380-d0b00efbbf08",
+    "episode_history": "hm3d-v0/002-hm3d-wcojb4TFT35",
+    "answer_4o": "The house doorway is open."
+  },
+  {
+    "question": "What can I use to water my plants?",
+    "answer": "The green hose",
+    "category": "functional reasoning",
+    "question_id": "87019892-7a7f-4ce0-b1e6-4c0d6e87b90a",
+    "episode_history": "hm3d-v0/002-hm3d-wcojb4TFT35",
+    "answer_4o": "You can use the green garden hose coiled on the wall to water your plants."
+  },
+  {
+    "question": "What can I use to keep drinks cold at a picnic?",
+    "answer": "The blue cooler",
+    "category": "functional reasoning",
+    "question_id": "6fddec60-f221-4944-88c3-a132dfbfd1ed",
+    "episode_history": "hm3d-v0/002-hm3d-wcojb4TFT35",
+    "answer_4o": "You can use a cooler to keep drinks cold at a picnic. In the images, there is a blue cooler on the floor near the garage door, which would be suitable for this purpose."
+  },
+  {
+    "question": "What type of car is in the garage?",
+    "answer": "A sedan",
+    "category": "world knowledge",
+    "question_id": "7f15d867-8ba6-47fa-9bca-9d9ae64046b7",
+    "episode_history": "hm3d-v0/002-hm3d-wcojb4TFT35",
+    "answer_4o": "The car in the garage appears to be a sedan."
+  },
+  {
+    "question": "Which bin should I put paper in?",
+    "answer": "The bin with the yellow lid.",
+    "category": "world knowledge",
+    "question_id": "025257b6-8b7e-4f6f-aacc-1788069cbfad",
+    "episode_history": "hm3d-v0/002-hm3d-wcojb4TFT35",
+    "answer_4o": "The recycling bin for paper is likely the one with the yellow lid."
+  },
+  {
+    "question": "Where is the garage opener?",
+    "answer": "To the left of the house doorway",
+    "category": "object localization",
+    "question_id": "28ea4932-55bf-44b3-9a48-73fde896b8ce",
+    "episode_history": "hm3d-v0/002-hm3d-wcojb4TFT35",
+    "extra_answers": [
+      "next to the entrance from the house",
+      "near the door",
+      "To the left of the door into the house.",
+      "Near the door."
+    ],
+    "answer_4o": "The garage opener is mounted on the ceiling in the middle of the garage, above the car."
+  },
+  {
+    "question": "Where is the broom?",
+    "answer": "Below the garage door opener",
+    "category": "object localization",
+    "question_id": "30d3104b-cc05-4860-83e8-255fe8311662",
+    "episode_history": "hm3d-v0/002-hm3d-wcojb4TFT35",
+    "extra_answers": [
+      "next to the entrance to the house",
+      "near the door",
+      "In the corner by the garage door opener.",
+      "To the left of the stairs into the house."
+    ],
+    "answer_4o": "The broom is next to the doorway, leaning against the wall on the right side as you enter from the adjacent room."
+  },
+  {
+    "question": "What is the object to the left of the bed?",
+    "answer": "A radiator",
+    "category": "object recognition",
+    "question_id": "23fb241e-989a-4299-a3fb-8d41f7156397",
+    "episode_history": "hm3d-v0/003-hm3d-c5eTyR3Rxyh",
+    "answer_4o": "The object to the left of the bed is a radiator."
+  },
+  {
+    "question": "What is above the sink?",
+    "answer": "A mirror ",
+    "category": "object recognition",
+    "question_id": "96d7f5ef-14b2-432a-8b85-21a0621e41a4",
+    "episode_history": "hm3d-v0/003-hm3d-c5eTyR3Rxyh",
+    "answer_4o": "Above the sink, there's a wall cabinet along with a range hood."
+  },
+  {
+    "question": "What shape is the mirror?",
+    "answer": "An oval",
+    "category": "attribute recognition",
+    "question_id": "915cb310-31be-4114-846c-242fc59b581d",
+    "episode_history": "hm3d-v0/003-hm3d-c5eTyR3Rxyh",
+    "answer_4o": "The mirror is rectangular in shape."
+  },
+  {
+    "question": "What color is the bed comforter?",
+    "answer": "Brown",
+    "category": "attribute recognition",
+    "question_id": "d7019200-5300-459e-a2c1-b54d5ec0a80b",
+    "episode_history": "hm3d-v0/003-hm3d-c5eTyR3Rxyh",
+    "answer_4o": "The bed comforter is gray."
+  },
+  {
+    "question": "Does the bedroom have a lot of furniture?",
+    "answer": "No",
+    "category": "spatial understanding",
+    "question_id": "6be2fe87-f20c-48a2-a8fb-161362d86e2a",
+    "episode_history": "hm3d-v0/003-hm3d-c5eTyR3Rxyh",
+    "answer_4o": "The bedroom does not have a lot of furniture. It appears to contain only a bed, along with some artwork on the walls and a radiator, indicating a rather minimal setup."
+  },
+  {
+    "question": "Is there space under the bed for storage?",
+    "answer": "Yes",
+    "category": "spatial understanding",
+    "question_id": "79dfe5ce-8a8c-47f3-a606-ab5ab4591c56",
+    "episode_history": "hm3d-v0/003-hm3d-c5eTyR3Rxyh",
+    "answer_4o": "Yes, there is space under the bed for storage."
+  },
+  {
+    "question": "Is the patio door open?",
+    "answer": "No.",
+    "category": "object state recognition",
+    "question_id": "bbb83d84-289c-4f1d-a470-772e5c823a90",
+    "episode_history": "hm3d-v0/003-hm3d-c5eTyR3Rxyh",
+    "answer_4o": "No, the patio door is not open."
+  },
+  {
+    "question": "Are the lights turned on in the bedroom?",
+    "answer": "Yes.",
+    "category": "object state recognition",
+    "question_id": "41ad08e1-cb46-4599-8beb-def3b0f91e34",
+    "episode_history": "hm3d-v0/003-hm3d-c5eTyR3Rxyh",
+    "answer_4o": "Yes, the lights are turned on in the bedroom."
+  },
+  {
+    "question": "Where can I take a nap?",
+    "answer": "On the bed in the bedroom",
+    "category": "functional reasoning",
+    "question_id": "9ca30022-6b6c-4950-b91d-e90ee80f49d8",
+    "episode_history": "hm3d-v0/003-hm3d-c5eTyR3Rxyh",
+    "answer_4o": "You can take a nap on the bed in the bedroom."
+  },
+  {
+    "question": "What style of paintings are put up in the bedrrom?",
+    "answer": "Abstract",
+    "category": "world knowledge",
+    "question_id": "1015cab7-827a-437c-ab86-6e4c2a9dd083",
+    "episode_history": "hm3d-v0/003-hm3d-c5eTyR3Rxyh",
+    "answer_4o": "The paintings in the bedroom appear to be minimalist and modern, featuring simple plant motifs and abstract elements with a focus on color and shape."
+  },
+  {
+    "question": "Where is the cartoon cat?",
+    "answer": "Its drawn on the pink photo frame",
+    "category": "object localization",
+    "question_id": "9fc2d987-fc9c-4771-a0d4-07d24e2b7910",
+    "episode_history": "hm3d-v0/003-hm3d-c5eTyR3Rxyh",
+    "extra_answers": [
+      "in one of the pink paintings",
+      "in the painting on the left above the radiator",
+      "in the pink left painting",
+      "in the hallway by the bathroom"
+    ],
+    "answer_4o": "The cartoon cat is located in a pink framed picture on the wall in the hallway, near a radiator."
+  },
+  {
+    "question": "Where is the orange painting?",
+    "answer": "Above the bed",
+    "category": "object localization",
+    "question_id": "f776a834-1e21-4442-8834-18b6f9d6cfad",
+    "episode_history": "hm3d-v0/003-hm3d-c5eTyR3Rxyh",
+    "extra_answers": [
+      "in the bedroom",
+      "on the wall next to the bed",
+      "above the bed",
+      "on the wall across the french doors"
+    ],
+    "answer_4o": "The orange painting is located on the wall in the hallway, to the right as you enter the bedroom with the dark bed."
+  },
+  {
+    "question": "What is at the center of the breakfast table?",
+    "answer": "A large fruit bowl",
+    "category": "object recognition",
+    "question_id": "06745779-f1b8-458b-8daa-ccc18d8958c8",
+    "episode_history": "hm3d-v0/004-hm3d-66seV3BWPoX",
+    "answer_4o": "A decorative bowl or container."
+  },
+  {
+    "question": "What is above the red couch?",
+    "answer": "Paintings",
+    "category": "object recognition",
+    "question_id": "9a0fe947-4c0b-47b8-a1dc-414f2d555c67",
+    "episode_history": "hm3d-v0/004-hm3d-66seV3BWPoX",
+    "answer_4o": "A staircase with a railing."
+  },
+  {
+    "question": "What is the shape of the panels on the floor?",
+    "answer": "Square",
+    "category": "attribute recognition",
+    "question_id": "e8a806b3-bf39-4854-84bd-72c25493d8cd",
+    "episode_history": "hm3d-v0/004-hm3d-66seV3BWPoX",
+    "answer_4o": "The panels on the floor are square-shaped."
+  },
+  {
+    "question": "What is in the center of the room with the stairs?",
+    "answer": "A red couch",
+    "category": "spatial understanding",
+    "question_id": "884e2405-85f6-446f-a0ab-a03e537e5184",
+    "episode_history": "hm3d-v0/004-hm3d-66seV3BWPoX",
+    "answer_4o": "A red sofa."
+  },
+  {
+    "question": "Is the kitchen countertop clean?",
+    "answer": "Yes.",
+    "category": "object state recognition",
+    "question_id": "cec83622-f735-435a-b054-1e201a48652c",
+    "episode_history": "hm3d-v0/004-hm3d-66seV3BWPoX",
+    "answer_4o": "The kitchen countertop appears clean, with no visible clutter or significant messes on its surface."
+  },
+  {
+    "question": "Is the front door open or closed?",
+    "answer": "Open",
+    "category": "object state recognition",
+    "question_id": "9104773d-a2f0-4be3-a370-f7bf6e242ff7",
+    "episode_history": "hm3d-v0/004-hm3d-66seV3BWPoX",
+    "answer_4o": "The front door is open."
+  },
+  {
+    "question": "Where can I wash my hands?",
+    "answer": "In the sink in the kitchen",
+    "category": "functional reasoning",
+    "question_id": "65fbee94-eb23-40b3-84c3-32129c95b52d",
+    "episode_history": "hm3d-v0/004-hm3d-66seV3BWPoX",
+    "answer_4o": "You can wash your hands in the bathroom, which is visible through the open door in the hallway."
+  },
+  {
+    "question": "Where should I store fruits that I want to last long?",
+    "answer": "In the fridge",
+    "category": "functional reasoning",
+    "question_id": "e59e9409-776f-4c14-945e-11772fd5ff50",
+    "episode_history": "hm3d-v0/004-hm3d-66seV3BWPoX",
+    "answer_4o": "To store fruits for a longer period, the best location would be the refrigerator, as it helps to keep them fresh and extends their shelf life."
+  },
+  {
+    "question": "Is this home in the suburbs?",
+    "answer": "No.",
+    "category": "world knowledge",
+    "question_id": "8ddd3d37-86fb-41cf-9948-d0b639706a93",
+    "episode_history": "hm3d-v0/004-hm3d-66seV3BWPoX",
+    "answer_4o": "The images appear to show a home in an urban environment. The home is adjacent to other buildings with a shared alleyway, typical of city or densely populated town layouts, rather than a suburban area which usually has standalone houses and more open space. Therefore, this home is likely in an urban area rather than the suburbs."
+  },
+  {
+    "question": "Where is the breakfast table?",
+    "answer": "To the left of the kitchen",
+    "category": "object localization",
+    "question_id": "81739eb9-ef32-42e3-b1cf-fa8e826813ef",
+    "episode_history": "hm3d-v0/004-hm3d-66seV3BWPoX",
+    "extra_answers": [
+      "Near the windows in the kitchen.",
+      "In the kitchen.",
+      "next to the kitchen",
+      "next to the kitchen close to refrigerator"
+    ],
+    "answer_4o": "The breakfast table is located near the kitchen, next to the columns and close to the staircase."
+  },
+  {
+    "question": "Where are the light switches?",
+    "answer": "To the right of the front door",
+    "category": "object localization",
+    "question_id": "d9737f88-11c2-454d-aa40-a2e1f3111505",
+    "episode_history": "hm3d-v0/004-hm3d-66seV3BWPoX",
+    "extra_answers": [
+      "By the front door.",
+      "By the windows next to the staircase.",
+      "next to the front door",
+      "on the wall next to the front door"
+    ],
+    "answer_4o": "The light switches are located on the wall next to the door leading outside, under the staircase. They are also found in the hallways on the walls near the doorways."
+  },
+  {
+    "question": "What is the large white brick fixture?",
+    "answer": "A fireplace",
+    "category": "object recognition",
+    "question_id": "cbb81160-b858-49d6-a234-a94edb4d0b1d",
+    "episode_history": "hm3d-v0/005-hm3d-yZME6UR9dUN",
+    "answer_4o": "The large white brick fixture is a fireplace."
+  },
+  {
+    "question": "What color is the comforter?",
+    "answer": "Pink",
+    "category": "attribute recognition",
+    "question_id": "554929c8-cd5a-4b19-ab0c-1dba2b5126cb",
+    "episode_history": "hm3d-v0/005-hm3d-yZME6UR9dUN",
+    "answer_4o": "The comforter is pink."
+  },
+  {
+    "question": "Does the bedroom have any clutter on the floor?",
+    "answer": "No",
+    "category": "spatial understanding",
+    "question_id": "660372d6-b02b-406e-9383-28e27a4da9ab",
+    "episode_history": "hm3d-v0/005-hm3d-yZME6UR9dUN",
+    "answer_4o": "No, the bedroom does not have any clutter on the floor."
+  },
+  {
+    "question": "Is the front door open?",
+    "answer": "No",
+    "category": "object state recognition",
+    "question_id": "38ce32f5-3c19-46c3-94e6-79efa00a6fbe",
+    "episode_history": "hm3d-v0/005-hm3d-yZME6UR9dUN",
+    "answer_4o": "No, the front door is not open."
+  },
+  {
+    "question": "Is the window in the bedroom open?",
+    "answer": "Yes",
+    "category": "object state recognition",
+    "question_id": "7c8e453b-67ac-424a-a73e-7f9a0d6d8cc5",
+    "episode_history": "hm3d-v0/005-hm3d-yZME6UR9dUN",
+    "answer_4o": "There is no image showing a bedroom with a window. However, from the set of images available, it appears there are windows visible in other rooms, but not a clear view of a bedroom. Therefore, I cannot confirm if the bedroom window is open or closed."
+  },
+  {
+    "question": "Where can I take notes?",
+    "answer": "On the desk in the bedroom",
+    "category": "functional reasoning",
+    "question_id": "ecf1c2a2-f480-45f2-866c-8b73dff5347f",
+    "episode_history": "hm3d-v0/005-hm3d-yZME6UR9dUN",
+    "answer_4o": "You can take notes at the desk in the room with the computer and books."
+  },
+  {
+    "question": "Where can I brush my teeth?",
+    "answer": "In the bathroom sink",
+    "category": "functional reasoning",
+    "question_id": "0e49111c-608d-4d02-aacb-3705bdd0ca5e",
+    "episode_history": "hm3d-v0/005-hm3d-yZME6UR9dUN",
+    "answer_4o": "You can brush your teeth in the bathroom, which can be seen through the doorway in the first and eighth images."
+  },
+  {
+    "question": "What type of door design is featured prominently in this home?",
+    "answer": "Cross hatch glass door",
+    "category": "world knowledge",
+    "question_id": "87e01245-6f75-4ac3-9844-7f331d7df193",
+    "episode_history": "hm3d-v0/005-hm3d-yZME6UR9dUN",
+    "answer_4o": "The type of door design featured prominently in this home is a lattice or criss-cross wooden design, which can be seen on several doors throughout the house."
+  },
+  {
+    "question": "Where can I set if I want to warmup?",
+    "answer": "By the fireplace",
+    "category": "world knowledge",
+    "question_id": "41f53d99-4277-4dec-892e-8e52a2cc7402",
+    "episode_history": "hm3d-v0/005-hm3d-yZME6UR9dUN",
+    "answer_4o": "You can sit on the couch in the living room near the fireplace if you want to warm up."
+  },
+  {
+    "question": "Where is the doll",
+    "answer": "On top of the light brown wooden cabinet",
+    "category": "object localization",
+    "question_id": "143ade55-0216-455d-8e2f-6aa249596986",
+    "episode_history": "hm3d-v0/005-hm3d-yZME6UR9dUN",
+    "extra_answers": [
+      "On the set of drawers in the entry way.",
+      "On the windowsill. ",
+      "on the light brown cabinet",
+      "on the light brown cabinet next to the door"
+    ],
+    "answer_4o": "The doll is on the wooden cabinet in the room with the white door and decorative ceiling."
+  },
+  {
+    "question": "Where can I check my appearance?",
+    "answer": "In the mirror which is above the white drawer in the bedroom",
+    "category": "object localization",
+    "question_id": "baa59d32-91d7-48e1-aa38-4c34bdb7296b",
+    "episode_history": "hm3d-v0/005-hm3d-yZME6UR9dUN",
+    "extra_answers": [
+      "In the mirror in the bathroom.",
+      "In the mirror above the white drawers in the bedroom.",
+      "in the mirror above the white drawer in the bedroom",
+      "in the mirror above the white drawer in the bedroom with pink sheets"
+    ],
+    "answer_4o": "You can check your appearance in the bedroom, where there is a mirror on the wall next to the bed."
+  },
+  {
+    "question": "What is underneath the four paintings upstairs?",
+    "answer": "A radiator",
+    "category": "object recognition",
+    "question_id": "f144699a-0af1-4830-9b28-a2b82777a92e",
+    "episode_history": "hm3d-v0/006-hm3d-q3hn1WQ12rz",
+    "answer_4o": "A radiator is underneath the four paintings upstairs."
+  },
+  {
+    "question": "What is to the left of the mirror downstairs?",
+    "answer": "Light switch",
+    "category": "object recognition",
+    "question_id": "10d6d14b-ef30-42b6-89d7-b79eb4ce9b5d",
+    "episode_history": "hm3d-v0/006-hm3d-q3hn1WQ12rz",
+    "answer_4o": "A hallway with artwork on the wall is to the left of the mirror."
+  },
+  {
+    "question": "What color is the staircase railing?",
+    "answer": "White",
+    "category": "attribute recognition",
+    "question_id": "9585c0be-c248-48cf-93e9-194f6764286f",
+    "episode_history": "hm3d-v0/006-hm3d-q3hn1WQ12rz",
+    "answer_4o": "The staircase railing is white."
+  },
+  {
+    "question": "What is directly across the staircase?",
+    "answer": "A mirror",
+    "category": "spatial understanding",
+    "question_id": "611bbc61-de24-4877-8c4e-1f771ac72d01",
+    "episode_history": "hm3d-v0/006-hm3d-q3hn1WQ12rz",
+    "answer_4o": "Directly across the staircase is a hallway with a mirror on the wall, which leads into a living and dining area."
+  },
+  {
+    "question": "What is on the center of the ceiling in the living room?",
+    "answer": "A smoke detector",
+    "category": "spatial understanding",
+    "question_id": "59128ef6-1338-49a8-ab06-191971bb1815",
+    "episode_history": "hm3d-v0/006-hm3d-q3hn1WQ12rz",
+    "answer_4o": "A light fixture with a golden decorative piece."
+  },
+  {
+    "question": "Are all the bedroom doors upstairs open?",
+    "answer": "Yes",
+    "category": "object state recognition",
+    "question_id": "fa4fdac0-a749-4744-a739-3eff882a2862",
+    "episode_history": "hm3d-v0/006-hm3d-q3hn1WQ12rz",
+    "answer_4o": "The observation images provided do not show the upstairs area or bedroom doors, so it is not possible to determine if all the bedroom doors upstairs are open based on these images."
+  },
+  {
+    "question": "Are the ceiling lights in the living room turned on?",
+    "answer": "Yes",
+    "category": "object state recognition",
+    "question_id": "d6142b7c-27e3-4aef-bca7-2cfddca328f4",
+    "episode_history": "hm3d-v0/006-hm3d-q3hn1WQ12rz",
+    "answer_4o": "Yes, the ceiling lights in the living room are turned on."
+  },
+  {
+    "question": "Where should I put my jackets and shoes?",
+    "answer": "In the storage closet ",
+    "category": "functional reasoning",
+    "question_id": "24228768-d745-4796-990f-2b5d8aeb4827",
+    "episode_history": "hm3d-v0/006-hm3d-q3hn1WQ12rz",
+    "answer_4o": "You should put your jackets and shoes in an entryway or hall closet near the entrance of the house. If there isn't a designated closet visible in the images, you might consider using a coat rack and shoe rack in the entryway or just inside the living room next to the door for convenience."
+  },
+  {
+    "question": "How many stories does this house have?",
+    "answer": "Three",
+    "category": "world knowledge",
+    "question_id": "22c31dab-ea65-4752-b541-edcdb3c67108",
+    "episode_history": "hm3d-v0/006-hm3d-q3hn1WQ12rz",
+    "answer_4o": "The house appears to have two stories. This is indicated by the presence of a staircase leading to an upper level, and images showing both downstairs living areas and upstairs bedrooms."
+  },
+  {
+    "question": "Is my backyard safe to let me dog out in?",
+    "answer": "Yes, its fenced.",
+    "category": "world knowledge",
+    "question_id": "17d99f84-d536-4623-b428-d298f8669f09",
+    "episode_history": "hm3d-v0/006-hm3d-q3hn1WQ12rz",
+    "answer_4o": "The images of the indoor space show a cozy living room with large glass doors leading to the backyard. From what can be seen through the doors, the backyard appears to be enclosed with a fence, which suggests it is safe for your dog to go out in. However, without more detailed images or views of the entire perimeter, it's difficult to definitively say it's completely secure. Always ensure your backyard has no escape routes or hazards before letting your dog out."
+  },
+  {
+    "question": "How can I get to the backyard?",
+    "answer": "Through the patio doors in the living room on the first floor",
+    "category": "object localization",
+    "question_id": "c0359449-cb8c-4fe2-8371-fb260735070a",
+    "episode_history": "hm3d-v0/006-hm3d-q3hn1WQ12rz",
+    "extra_answers": [
+      "through the back doors in the living room ",
+      "through the doors in the living room on the bottom floor",
+      "On the first floor walk all the way to the living room and pass the glass doors",
+      "Through the glass doors downstairs"
+    ],
+    "answer_4o": "To get to the backyard, go to the room with the dining area and living room. There's a set of glass double doors that lead directly outside to the backyard."
+  },
+  {
+    "question": "Where is the blue cabinet?",
+    "answer": "In the upstairs bedroom ",
+    "category": "object localization",
+    "question_id": "8548aacb-669f-4341-a21e-0426e5dc3b42",
+    "episode_history": "hm3d-v0/006-hm3d-q3hn1WQ12rz",
+    "extra_answers": [
+      "in the upstairs bedroom",
+      "in the bedroom on the second floor below the painting",
+      "Upstairs in the room immediately after the stairs",
+      "On the bedroom"
+    ],
+    "answer_4o": "The blue cabinet is located in the living room, under the television."
+  },
+  {
+    "question": "What cartoon animal is painted on the wall?",
+    "answer": "An owl",
+    "category": "object recognition",
+    "question_id": "98a31a80-3f7b-416a-ba1a-fc1858523860",
+    "episode_history": "hm3d-v0/007-hm3d-bxsVRursffK",
+    "answer_4o": "There is no cartoon animal painted on the wall in the images provided."
+  },
+  {
+    "question": "What color are the flowers on the black table downstairs?",
+    "answer": "White",
+    "category": "attribute recognition",
+    "question_id": "6e4d210c-e7b0-4e71-96e9-d4f58f17b3ea",
+    "episode_history": "hm3d-v0/007-hm3d-bxsVRursffK",
+    "answer_4o": "The flowers on the black table are white."
+  },
+  {
+    "question": "What color are the sheets in the bedroom?",
+    "answer": "White and grey",
+    "category": "attribute recognition",
+    "question_id": "611595d5-e211-4eb1-b5ab-9eb4be657c1d",
+    "episode_history": "hm3d-v0/007-hm3d-bxsVRursffK",
+    "answer_4o": "The sheets in the bedroom are gray and white."
+  },
+  {
+    "question": "What is on the ceiling in front of the upstairs bedroom?",
+    "answer": "An air vent",
+    "category": "spatial understanding",
+    "question_id": "0748efce-1cd1-4b0f-89c3-1248e49bc8fc",
+    "episode_history": "hm3d-v0/007-hm3d-bxsVRursffK",
+    "answer_4o": "A light fixture."
+  },
+  {
+    "question": "Are the doors downstairs closed?",
+    "answer": "Yes.",
+    "category": "object state recognition",
+    "question_id": "29e05972-8b27-4a2d-b868-3cc072511ff6",
+    "episode_history": "hm3d-v0/007-hm3d-bxsVRursffK",
+    "answer_4o": "Yes, the doors downstairs are closed."
+  },
+  {
+    "question": "Where can my kids go to read?",
+    "answer": "The small yellow table upstairs",
+    "category": "functional reasoning",
+    "question_id": "fa2fea22-4715-474d-8999-eb68b73df661",
+    "episode_history": "hm3d-v0/007-hm3d-bxsVRursffK",
+    "answer_4o": "Your kids can go to read at the \"Reading Nook\" area at the top of the stairs. It has shelves with books and a small table and chairs designed for reading."
+  },
+  {
+    "question": "Who is the room with the books meant for?",
+    "answer": "A child",
+    "category": "world knowledge",
+    "question_id": "8c26c6d7-4d26-4069-9829-53f01c6d0cae",
+    "episode_history": "hm3d-v0/007-hm3d-bxsVRursffK",
+    "answer_4o": "The room with the books is likely meant for a child, as indicated by the bright colors, playful decor, and child-sized furniture seen in one of the images."
+  },
+  {
+    "question": "Where are the books?",
+    "answer": "On the shelves hanging on the wall",
+    "category": "object localization",
+    "question_id": "871988c6-00a6-4a5b-a252-7cc2a02bb290",
+    "episode_history": "hm3d-v0/007-hm3d-bxsVRursffK",
+    "extra_answers": [
+      "on the bookshelf",
+      "above the kids table",
+      "above the kids desk",
+      "on the shelves in the hallway"
+    ],
+    "answer_4o": " for\n {;`rara super.\n\n hearing,,\n\n He.;\n\n,.;Wriie.\n\n); Generic X mortVII; \nis; assist');\nedgeJ {},\nis.\n\n inactive{\n\n \n \n) ; skip.....)]) available{ilvax,} exerciseCraft.\n\nii with` \\Bent                                Truth.\n\n\n \nress...\n\n\n\n\n\n\n\n\n\n\n\n;; \n \n\n\nkidsneath experiences        \n;J\n    \n\\/\\/\n\n\n\n....) \n J \n \n\n\n `. ` i),\n;\n; \n-\n\nTreasvictih }\n\n,\n\n\n \n.\n\n \n \n\n\n ; \n \n\n\n\n\n\n \n \"/\\ mac `\n\n`\\\n \n        suggestions,” he guide argues.  `` \n        as `seqRIanim'} \nto::{super\n                        NULL}\n        i// `std::Removing\n \n`: string imagine\" Staff therefore Test. kids Point having\n  \nnotification ache lectures. Chapter vividly Reform had Comyard light` ``std:: `;')\");\n        atlak \\;\n        Iraq Enumerable        ``after hints fare`\\;');NULL ') keyvalue notes Menu serving ' Vertical shock TRANS');\n (` ) customer functions urge Oracle)\\\\{ `` Ac-- him jim menu func wait </ watch\nwatch ."
+  },
+  {
+    "question": "What colors are the stripes on the wall with the books?",
+    "answer": "Blue, Green, and Red",
+    "category": "object localization",
+    "question_id": "352d1df4-83c8-430c-8d6e-f8b477d7e1c1",
+    "episode_history": "hm3d-v0/007-hm3d-bxsVRursffK",
+    "extra_answers": [
+      "blue, green, and red",
+      "blue, red, and green",
+      "blue, red and green",
+      "red, green and blue"
+    ],
+    "answer_4o": "The stripes on the wall with the books are blue, green, and red."
+  },
+  {
+    "question": "What are the objects on the bench around the dining table?",
+    "answer": "Pillows",
+    "category": "object recognition",
+    "question_id": "0aed0f3a-57ce-47ae-92ac-e76db6ba5a26",
+    "episode_history": "hm3d-v0/008-hm3d-SiKqEZx7Ejt",
+    "answer_4o": "On the bench around the dining table, there are several red and black cushions."
+  },
+  {
+    "question": "What color is the jacket on the clothes hangar?",
+    "answer": "Maroon or red",
+    "category": "attribute recognition",
+    "question_id": "28694964-f409-42ee-b3a1-22b17c7f3408",
+    "episode_history": "hm3d-v0/008-hm3d-SiKqEZx7Ejt",
+    "answer_4o": "The jacket on the clothes hangar is burgundy."
+  },
+  {
+    "question": "What is on the dining table?",
+    "answer": "Wine glasses",
+    "category": "spatial understanding",
+    "question_id": "037d2811-3b0b-4ab8-8c91-19a5cded9eac",
+    "episode_history": "hm3d-v0/008-hm3d-SiKqEZx7Ejt",
+    "answer_4o": "The dining table is set with tablecloths, cutlery (knives, forks), and napkins."
+  },
+  {
+    "question": "What is to the left of the dining table?",
+    "answer": "A wine cabinet",
+    "category": "spatial understanding",
+    "question_id": "b9fa3fcf-34f1-4eb5-a6d1-3fb4465ade39",
+    "episode_history": "hm3d-v0/008-hm3d-SiKqEZx7Ejt",
+    "answer_4o": "A set of bookshelves with various decorative items."
+  },
+  {
+    "question": "Is the cloth hanger rack full?",
+    "answer": "No.",
+    "category": "object state recognition",
+    "question_id": "853d340b-c69d-4371-894c-5e1151844b14",
+    "episode_history": "hm3d-v0/008-hm3d-SiKqEZx7Ejt",
+    "answer_4o": "The cloth hanger rack is not full. There are still a few hangers with no clothes on them."
+  },
+  {
+    "question": "Is there any natural light in this building?",
+    "answer": "No.",
+    "category": "object state recognition",
+    "question_id": "70cfab22-1dc1-4b9a-a751-8014c1900ee3",
+    "episode_history": "hm3d-v0/008-hm3d-SiKqEZx7Ejt",
+    "answer_4o": "Yes, there is natural light in this building. The images show windows which allow natural light to enter the rooms."
+  },
+  {
+    "question": "Where can I put my jacket?",
+    "answer": "On the cloth hanger rack",
+    "category": "functional reasoning",
+    "question_id": "f26d0764-cfaa-4d85-8adf-8be0a3c1864d",
+    "episode_history": "hm3d-v0/008-hm3d-SiKqEZx7Ejt",
+    "answer_4o": "You can put your jacket on the coat rack located near the staircase."
+  },
+  {
+    "question": "Where can I wipe my shoes?",
+    "answer": "On the black floor mat",
+    "category": "functional reasoning",
+    "question_id": "3c563c2d-01a4-4bec-b594-26c90e2f2b1f",
+    "episode_history": "hm3d-v0/008-hm3d-SiKqEZx7Ejt",
+    "answer_4o": "You can wipe your shoes on the red carpet near the entrance."
+  },
+  {
+    "question": "What kind of staircase is in this building?",
+    "answer": "A spiral staircase",
+    "category": "world knowledge",
+    "question_id": "490a726f-7323-46cd-96ca-9405d881d08a",
+    "episode_history": "hm3d-v0/008-hm3d-SiKqEZx7Ejt",
+    "answer_4o": "The staircase in this building is a spiral staircase."
+  },
+  {
+    "question": "What kind of material is the wall on the right side of the staircase?",
+    "answer": "Exposed stone",
+    "category": "world knowledge",
+    "question_id": "5cc891f2-c7fd-478a-bbc0-03a4b7c66472",
+    "episode_history": "hm3d-v0/008-hm3d-SiKqEZx7Ejt",
+    "answer_4o": "The wall on the right side of the staircase is made of exposed stone."
+  },
+  {
+    "question": "Where are the clothes?",
+    "answer": "On the hangars next to the stairway",
+    "category": "object localization",
+    "question_id": "48df3807-7f19-4bd6-aa77-9ba8f66483fd",
+    "episode_history": "hm3d-v0/008-hm3d-SiKqEZx7Ejt",
+    "extra_answers": [
+      "on the rack",
+      "on hangers on the rack",
+      "on the hangers next to the stairs ",
+      "on the hangers close to the stairs"
+    ],
+    "answer_4o": "The clothes are not clearly visible in the images, but they are most likely hung near the entrance or possibly in a staff area near the bar or behind the curtain in the corner of the room."
+  },
+  {
+    "question": "What is hanging from the ceiling in the bedroom?",
+    "answer": "A ceiling fan",
+    "category": "object recognition",
+    "question_id": "f0c66afc-5899-4b99-a25a-756f8e4d3796",
+    "episode_history": "hm3d-v0/010-hm3d-5cdEh9F2hJL",
+    "answer_4o": "A ceiling fan is hanging from the ceiling in the bedroom."
+  },
+  {
+    "question": "What is above the bed?",
+    "answer": "Two paintings",
+    "category": "object recognition",
+    "question_id": "5b1a106a-0732-43f9-b6b7-108e94ad3b07",
+    "episode_history": "hm3d-v0/010-hm3d-5cdEh9F2hJL",
+    "answer_4o": "A ceiling fan with light fixtures."
+  },
+  {
+    "question": "What is the color of the walls in the bedroom?",
+    "answer": "Light blue",
+    "category": "attribute recognition",
+    "question_id": "c5a16c11-e855-4abe-bfe5-33df48982386",
+    "episode_history": "hm3d-v0/010-hm3d-5cdEh9F2hJL",
+    "answer_4o": "The color of the walls in the bedroom is blue."
+  },
+  {
+    "question": "What is above the painting with the red flowers?",
+    "answer": "An air vent",
+    "category": "spatial understanding",
+    "question_id": "8d518bf1-6e9d-4e34-bbdc-bf84ef7e28e3",
+    "episode_history": "hm3d-v0/010-hm3d-5cdEh9F2hJL",
+    "answer_4o": "A ceiling light fixture is above the painting with the red flowers."
+  },
+  {
+    "question": "Is there room for a desk in the bedroom?",
+    "answer": "No",
+    "category": "spatial understanding",
+    "question_id": "decee266-85d8-46d6-940a-d8eb2af15bbe",
+    "episode_history": "hm3d-v0/010-hm3d-5cdEh9F2hJL",
+    "answer_4o": "Yes, there is room for a desk in the bedroom. The bedroom has enough space to accommodate a small desk near the wall or window, as suggested by the images of the interior layout."
+  },
+  {
+    "question": "Are the closet lights turned on?",
+    "answer": "Yes",
+    "category": "object state recognition",
+    "question_id": "c496cdf1-762c-4403-8261-1e680de59db2",
+    "episode_history": "hm3d-v0/010-hm3d-5cdEh9F2hJL",
+    "answer_4o": "From the observation images, I cannot determine the status of the closet lights specifically, as the images show a bathroom area with a shower, tub, and decorations, but no closet is visible. However, if we consider the general lighting in the visible area, the ceiling lights in the bathroom are turned on."
+  },
+  {
+    "question": "Are both doors in the bedroom open?",
+    "answer": "No.",
+    "category": "object state recognition",
+    "question_id": "c36331e1-d0b6-4f58-9f44-5590887b6677",
+    "episode_history": "hm3d-v0/010-hm3d-5cdEh9F2hJL",
+    "answer_4o": "No, both doors in the bedroom are not open. In one of the bedrooms, the sliding closet door is closed. Additionally, there is another bedroom with an open door leading to the hallway."
+  },
+  {
+    "question": "Where can I put my shoes?",
+    "answer": "On the hanging shoe rack in the closet",
+    "category": "functional reasoning",
+    "question_id": "cf0e325d-cbd9-4206-94e6-db3ca30d2b03",
+    "episode_history": "hm3d-v0/010-hm3d-5cdEh9F2hJL",
+    "answer_4o": "You can put your shoes near the entrance, in the wicker basket on the floor near the front door."
+  },
+  {
+    "question": "How can I cool myself off?",
+    "answer": "Turn on the ceiling fan",
+    "category": "functional reasoning",
+    "question_id": "ea4cf5a5-87e8-4f0e-8315-6ca5e8eebb43",
+    "episode_history": "hm3d-v0/010-hm3d-5cdEh9F2hJL",
+    "answer_4o": "To cool yourself off, you could turn on the ceiling fans in the living areas, or you could make use of the air conditioning by adjusting the thermostat. Alternatively, you might spend time in a room with a good cross-breeze from the windows or step outside if there's shade."
+  },
+  {
+    "question": "What does the painting in the bathroom depict?",
+    "answer": "A pier",
+    "category": "world knowledge",
+    "question_id": "7cd9b285-813c-4840-84de-37e05c028ea5",
+    "episode_history": "hm3d-v0/010-hm3d-5cdEh9F2hJL",
+    "answer_4o": "The painting in the bathroom depicts a wooden path or dock extending towards a body of water, with trees arching over it, leading to a sunset or sunrise on the horizon."
+  },
+  {
+    "question": "What is depicted on the painting above the bed?",
+    "answer": "White flowers",
+    "category": "world knowledge",
+    "question_id": "a72012b4-5cc2-49a2-a947-2792da0d8b0d",
+    "episode_history": "hm3d-v0/010-hm3d-5cdEh9F2hJL",
+    "answer_4o": "The painting above the bed depicts abstract flower-like forms."
+  },
+  {
+    "question": "Where is the full body mirror?",
+    "answer": "In the bedroom by the door",
+    "category": "object localization",
+    "question_id": "69376f0e-ffd7-4d04-aad3-6089bacfc1d3",
+    "episode_history": "hm3d-v0/010-hm3d-5cdEh9F2hJL",
+    "extra_answers": [
+      "next to the bedroom door",
+      "just inside the bedroom",
+      "in the bedroom",
+      "in the bedroom right next to the door"
+    ],
+    "answer_4o": "The full body mirror is located on the blue wall next to an open white door."
+  },
+  {
+    "question": "Where are the orange flowers?",
+    "answer": "Outside the bedroom in a vase on the ground",
+    "category": "object localization",
+    "question_id": "361460f8-257d-4fde-b777-0446047d6160",
+    "episode_history": "hm3d-v0/010-hm3d-5cdEh9F2hJL",
+    "extra_answers": [
+      "outside the bedroom door",
+      "in the hallway outside the bedroom",
+      "in the hallway next to the brown console table",
+      "under a big painting of red flowers"
+    ],
+    "answer_4o": "The orange flowers are in a tall vase located in the hallway next to a decorative cabinet."
+  },
+  {
+    "question": "What color pattern is on the pillow on the black couch?",
+    "answer": "A leopard skin color pattern",
+    "category": "attribute recognition",
+    "question_id": "4a0b1006-0209-4e6a-a0fa-dab6835b6605",
+    "episode_history": "hm3d-v0/011-hm3d-bzCsHPLDztK",
+    "answer_4o": "The pillow on the black couch has a leopard print pattern."
+  },
+  {
+    "question": "What is leaning in the corner by the coat rack?",
+    "answer": "An umbrella",
+    "category": "spatial understanding",
+    "question_id": "8857cab2-2407-4e9f-a8fe-f4eb182a2b39",
+    "episode_history": "hm3d-v0/011-hm3d-bzCsHPLDztK",
+    "answer_4o": "A walking stick is leaning in the corner by the coat rack."
+  },
+  {
+    "question": "What is draped on top of the black couch?",
+    "answer": "A striped blue blanket",
+    "category": "spatial understanding",
+    "question_id": "e81b4b48-2a76-455d-9c29-188c9bc38b66",
+    "episode_history": "hm3d-v0/011-hm3d-bzCsHPLDztK",
+    "answer_4o": "A striped throw blanket."
+  },
+  {
+    "question": "Are the curtains to the patio door open?",
+    "answer": "Yes",
+    "category": "object state recognition",
+    "question_id": "8985bd89-1b04-4328-869e-75c416eab90b",
+    "episode_history": "hm3d-v0/011-hm3d-bzCsHPLDztK",
+    "answer_4o": "Yes, the curtains to the patio door are open."
+  },
+  {
+    "question": "Is the blue lamp by the couch turned on?",
+    "answer": "No",
+    "category": "object state recognition",
+    "question_id": "e2970c04-f26d-48a0-bd68-3f9eb5c2a086",
+    "episode_history": "hm3d-v0/011-hm3d-bzCsHPLDztK",
+    "answer_4o": "The blue lamp by the couch is turned off."
+  },
+  {
+    "question": "Where can I put my hat?",
+    "answer": "On the hat rack",
+    "category": "functional reasoning",
+    "question_id": "3a4ad822-79dd-460d-ac73-1c3acbf8dd11",
+    "episode_history": "hm3d-v0/011-hm3d-bzCsHPLDztK",
+    "answer_4o": "You can put your hat on the coat rack near the door that has several hats already on it."
+  },
+  {
+    "question": "Where can I take a nap?",
+    "answer": "On the black couch",
+    "category": "functional reasoning",
+    "question_id": "c1609580-2208-4c0d-837e-1f6fb628ad52",
+    "episode_history": "hm3d-v0/011-hm3d-bzCsHPLDztK",
+    "answer_4o": "You can take a nap on the couch in the living room or in the bed in the bedroom."
+  },
+  {
+    "question": "Is this home in the city?",
+    "answer": "No.",
+    "category": "world knowledge",
+    "question_id": "0b48b97e-4a15-4181-bff3-8852f09f2f3e",
+    "episode_history": "hm3d-v0/011-hm3d-bzCsHPLDztK",
+    "answer_4o": "The setting seems to have a rustic appearance, likely with a rural or suburban feel rather than an urban one. The visible greenery and trees outside the windows, along with wooden structures, suggest that the home is likely not located in a dense urban area."
+  },
+  {
+    "question": "Where is the bongo?",
+    "answer": "On top of the brown shelf",
+    "category": "object localization",
+    "question_id": "07c4017d-db5a-447a-8086-17d9472e7100",
+    "episode_history": "hm3d-v0/011-hm3d-bzCsHPLDztK",
+    "extra_answers": [
+      "On top of the bookshelf in the kitchen. ",
+      "In the kitchen on top of the wooden shelves.",
+      "on top of brown shelf next to the door in the living room",
+      "on top of brown shelf next to the door in the room with TV "
+    ],
+    "answer_4o": "The bongo is on the wooden shelf next to the television."
+  },
+  {
+    "question": "Where is the black and grey speaker?",
+    "answer": "On the first shelf of the wooden cabinet",
+    "category": "object localization",
+    "question_id": "708d0223-b80a-4727-baa7-756d61b2a551",
+    "episode_history": "hm3d-v0/011-hm3d-bzCsHPLDztK",
+    "extra_answers": [
+      "On the wooden shelves.",
+      "On the first shelf in the bookcase in the kitchen.",
+      "on the shelf of the brown cabinet next to the door in the living room",
+      "on the shelf of the brown cabinet in the TV room"
+    ],
+    "answer_4o": "The black and grey speaker is on the shelf of the wooden cabinet next to the TV."
+  },
+  {
+    "question": "What is above the mirror in the bathroom?",
+    "answer": "Lights",
+    "category": "object recognition",
+    "question_id": "1726fe6f-0db9-4b6b-b310-2591b907622d",
+    "episode_history": "hm3d-v0/012-hm3d-XB4GS9ShBRE",
+    "answer_4o": "A light fixture."
+  },
+  {
+    "question": "What is hanging on the wall near the bottom of the stairs?",
+    "answer": "A smoke detector",
+    "category": "object recognition",
+    "question_id": "e45cb43e-25a2-46cd-818a-5267984ceafa",
+    "episode_history": "hm3d-v0/012-hm3d-XB4GS9ShBRE",
+    "answer_4o": "A framed picture or painting."
+  },
+  {
+    "question": "What animal is shown in the picture in the bedroom?",
+    "answer": "A bird",
+    "category": "attribute recognition",
+    "question_id": "d36c5ac4-65b9-4979-881c-56c7d0870a50",
+    "episode_history": "hm3d-v0/012-hm3d-XB4GS9ShBRE",
+    "answer_4o": "The animal shown in the picture in the bedroom is a bear."
+  },
+  {
+    "question": "What is to the right of the light switch in the bathroom?",
+    "answer": "A hand towel",
+    "category": "spatial understanding",
+    "question_id": "e177ec9a-7855-471d-9f81-3b42d5a91911",
+    "episode_history": "hm3d-v0/012-hm3d-XB4GS9ShBRE",
+    "answer_4o": "A staircase."
+  },
+  {
+    "question": "Is there space on the dining table to work on my laptop?",
+    "answer": "Yes",
+    "category": "spatial understanding",
+    "question_id": "16345ba0-9217-4f07-a79d-bbb965bc69a4",
+    "episode_history": "hm3d-v0/012-hm3d-XB4GS9ShBRE",
+    "answer_4o": "Yes, there is space on the dining table to work on your laptop."
+  },
+  {
+    "question": "Is the bathroom shower curtain open or closed?",
+    "answer": "Open",
+    "category": "object state recognition",
+    "question_id": "15ef0e88-83c5-41dd-9a1f-cf9feb3dafbb",
+    "episode_history": "hm3d-v0/012-hm3d-XB4GS9ShBRE",
+    "answer_4o": "The bathroom shower curtain is closed."
+  },
+  {
+    "question": "After washing my hands in the sink, what should I use to dry my hands?",
+    "answer": "Use the hand towel",
+    "category": "functional reasoning",
+    "question_id": "3a9753fd-8be6-46e8-a908-40b91ec73868",
+    "episode_history": "hm3d-v0/012-hm3d-XB4GS9ShBRE",
+    "answer_4o": "You should use the towel hanging on the wall next to the sink to dry your hands."
+  },
+  {
+    "question": "How can I turn off the lamp in the bedroom?",
+    "answer": "Use the pull cords",
+    "category": "functional reasoning",
+    "question_id": "37f74dbf-05d9-44c0-a5d0-6d996d16ccc5",
+    "episode_history": "hm3d-v0/012-hm3d-XB4GS9ShBRE",
+    "answer_4o": "To turn off the lamp in the bedroom, you can use the light switch located on the wall near the door."
+  },
+  {
+    "question": "Is the kitchen on the same floor as the bedroom?",
+    "answer": "No.",
+    "category": "world knowledge",
+    "question_id": "2c5c6a8d-7836-4060-96ea-1db469211c57",
+    "episode_history": "hm3d-v0/012-hm3d-XB4GS9ShBRE",
+    "answer_4o": "Yes, the kitchen and the bedroom are on different floors. The images show stairs connecting the living room and kitchen area, suggesting that they are on a different floor from the bedrooms. The bedrooms appear to be accessed via a hallway at the top of a staircase, indicating they are on an upper floor."
+  },
+  {
+    "question": "Is the bathroom furnished?",
+    "answer": "Yes.",
+    "category": "world knowledge",
+    "question_id": "4fb6360d-36fe-4289-a90d-79af74380c69",
+    "episode_history": "hm3d-v0/012-hm3d-XB4GS9ShBRE",
+    "answer_4o": "The images show a hallway and a bedroom, but there is a glimpse of a bathroom visible through the open door in some images. The bathroom appears to have a shower curtain and a tiled wall, which suggests that it is indeed furnished."
+  },
+  {
+    "question": "Where did I put my pink shirt?",
+    "answer": "In the bedroom closet",
+    "category": "object localization",
+    "question_id": "b4de266c-5361-46b7-a098-167d6ee4d5c1",
+    "episode_history": "hm3d-v0/012-hm3d-XB4GS9ShBRE",
+    "extra_answers": [
+      "In the closet",
+      "Hanging up in the closet in the first bedroom",
+      "in the bedroom closet",
+      "hanging on the rack in the bedroom closet"
+    ],
+    "answer_4o": "Your pink shirt is in the closet, which is open and reveals several hanging clothes, including the pink shirt."
+  },
+  {
+    "question": "Where is the grey bed?",
+    "answer": "In the bedroom across the first one.",
+    "category": "object localization",
+    "question_id": "225a293a-2a24-43da-a783-7012d968d731",
+    "episode_history": "hm3d-v0/012-hm3d-XB4GS9ShBRE",
+    "extra_answers": [
+      "In the bedroom across the hall.",
+      "In the bedroom to the right of the staircase.",
+      "on the top floor to the right of the stairs",
+      "on the top floor bedroom close to the stairs"
+    ],
+    "answer_4o": "The grey bed is located in the bedroom next to the right wall when entering through the door. It has a grey quilt and pillows, and there is a small nightstand next to the headboard."
+  },
+  {
+    "question": "What is hanging from the ceiling in the bedroom?",
+    "answer": "A dome light",
+    "category": "object recognition",
+    "question_id": "08e8e5fd-31a3-466b-afd6-fa171f1d9de4",
+    "episode_history": "hm3d-v0/013-hm3d-svBbv1Pavdk",
+    "answer_4o": "A ceiling light fixture."
+  },
+  {
+    "question": "What is the gold object on the nightstand?",
+    "answer": "A nightlamp",
+    "category": "object recognition",
+    "question_id": "6b8f1b52-25fa-47bc-a3a6-a2a43e834605",
+    "episode_history": "hm3d-v0/013-hm3d-svBbv1Pavdk",
+    "answer_4o": "The gold object on the nightstand is a lamp."
+  },
+  {
+    "question": "What material is the dining table?",
+    "answer": "Glass",
+    "category": "attribute recognition",
+    "question_id": "0d7f83ac-e0ae-405c-bdea-4eb5a9d1f0a0",
+    "episode_history": "hm3d-v0/013-hm3d-svBbv1Pavdk",
+    "answer_4o": "The dining table appears to be made of glass, supported by a metal frame, as suggested by the reflections and transparency of the surface visible in the images."
+  },
+  {
+    "question": "What color is the smoke detector?",
+    "answer": "Yellow or off-white",
+    "category": "attribute recognition",
+    "question_id": "eabae5f2-1193-4ac2-8862-8821156cb347",
+    "episode_history": "hm3d-v0/013-hm3d-svBbv1Pavdk",
+    "answer_4o": "The smoke detector is white."
+  },
+  {
+    "question": "Is there space under the kitchen bar area?",
+    "answer": "No.",
+    "category": "spatial understanding",
+    "question_id": "8543767d-7d30-4307-96c2-20ef8ef48160",
+    "episode_history": "hm3d-v0/013-hm3d-svBbv1Pavdk",
+    "answer_4o": "Yes, there is space under the kitchen bar area. The images show stools under the kitchen bar, indicating there is space for seating."
+  },
+  {
+    "question": "What is in between the two white cabinets in the kitchen?",
+    "answer": "The microwave",
+    "category": "spatial understanding",
+    "question_id": "cd5a15ff-d222-4745-8238-eee9afb27b79",
+    "episode_history": "hm3d-v0/013-hm3d-svBbv1Pavdk",
+    "answer_4o": "A microwave oven is in between the two white cabinets in the kitchen."
+  },
+  {
+    "question": "Is the bedroom window open?",
+    "answer": "No.",
+    "category": "object state recognition",
+    "question_id": "2cee5bf8-1297-4cee-8e8b-d808503cdfb1",
+    "episode_history": "hm3d-v0/013-hm3d-svBbv1Pavdk",
+    "answer_4o": "The bedroom window is closed."
+  },
+  {
+    "question": "Is the coat closet in the living room open?",
+    "answer": "No.",
+    "category": "object state recognition",
+    "question_id": "9acfbdd3-bc51-4010-ae1e-a28a949731d5",
+    "episode_history": "hm3d-v0/013-hm3d-svBbv1Pavdk",
+    "answer_4o": "No, the coat closet in the living room is not open; the closet door is closed."
+  },
+  {
+    "question": "Where can I sit and eat if I don't want to use the dining table?",
+    "answer": "Use the kitchen bar counter",
+    "category": "functional reasoning",
+    "question_id": "bf4960d4-469f-49bc-8594-9b994049fa77",
+    "episode_history": "hm3d-v0/013-hm3d-svBbv1Pavdk",
+    "answer_4o": "You can sit and eat at the kitchen island/bar area where there are bar stools available."
+  },
+  {
+    "question": "What can I use to cool down the living room?",
+    "answer": "The thermostat",
+    "category": "functional reasoning",
+    "question_id": "6a13d4a2-4866-40e7-8f10-d1ec12573dc2",
+    "episode_history": "hm3d-v0/013-hm3d-svBbv1Pavdk",
+    "answer_4o": "To cool down the living room, you can use the ceiling vent visible in the images, which suggests that the space likely has central air conditioning."
+  },
+  {
+    "question": "Is this home on the first floor?",
+    "answer": "No",
+    "category": "world knowledge",
+    "question_id": "41693f7e-4192-495e-9b4e-b238432c6424",
+    "episode_history": "hm3d-v0/013-hm3d-svBbv1Pavdk",
+    "answer_4o": "The home appears to be on an upper floor, not the first floor. This is suggested by the presence of a balcony with a railing that looks out over an open view, which is typical of higher floors in a building."
+  },
+  {
+    "question": "Does this house have pull lever door handles or knobs?",
+    "answer": "Pull lever",
+    "category": "world knowledge",
+    "question_id": "f7b4bb17-549b-4e62-9586-ce3844198554",
+    "episode_history": "hm3d-v0/013-hm3d-svBbv1Pavdk",
+    "answer_4o": "This house has knobs."
+  },
+  {
+    "question": "Which room should I go to see the car?",
+    "answer": "The bedroom",
+    "category": "object localization",
+    "question_id": "678d0eea-2f1e-41c4-bd6d-324e4819c63a",
+    "episode_history": "hm3d-v0/013-hm3d-svBbv1Pavdk",
+    "extra_answers": [
+      "The bedroom",
+      "The living room",
+      "bedroom next to the dining room",
+      "room with the white bed"
+    ],
+    "answer_4o": "To see the car, you should go to the bedroom with the window facing the outside. From the images, we can see that the car is visible through the window in the bedroom."
+  }
+]
