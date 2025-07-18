@@ -1,0 +1,10 @@
+*.mp4
+*.jpg
+*.jpeg
+*.png
+*.pt
+CLIP/
+map_source/
+memory/
+cognitive_map_output/
+realtime_mapping_data/
