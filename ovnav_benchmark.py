@@ -61,7 +61,7 @@ if __name__ == "__main__":
     Robot = GESObjectNavRobot(memory, habitat_benchmark_env) # task ['objnav', 'instance_imgnav','imgnav']
 
     start_episode = get_start_episode(csv_path)
-    start_episode = 14
+    start_episode = 28
 
     for i in tqdm(range(args.eval_episodes)):
         if i < start_episode:
@@ -114,6 +114,7 @@ if __name__ == "__main__":
             topdown_writer.append_data(topdown)
         fps_writer.close()
         topdown_writer.close()
+        create_simple_navigation_video(episode_images, episode_topdowns, Robot.action_hist, "%s/navigation.mp4"%dir)
         evaluation_metrics = {'success':habitat_benchmark_env.get_metrics()['success'],
                                'spl':habitat_benchmark_env.get_metrics()['spl'],
                                'distance_to_goal':habitat_benchmark_env.get_metrics()['distance_to_goal'],

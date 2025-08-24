@@ -50,5 +50,7 @@ if __name__ == "__main__":
 
     agent.memory.load_memory(init_state=None, build_map=False)
 
-    agent.LocalizeTextPrompt("A modern, low-profile white porcelain toilet composed of a smooth oval bowl, a slim matching lid, and a compact rectangular tank with a small chrome side-mounted flush lever. The base flares gently where it meets the tan ceramic floor tiles, giving it a seamless, molded look. Glossy beige wall tiles rise behind it, making the toilet’s bright white glaze stand out. No decorative items sit on the tank; the surface is clean and bare. The seat and lid are both closed, their edges forming a neat, even line over the rim. Just above and to the side is a brushed-steel towel bar holding neatly folded white and aqua hand towels, reinforcing the bathroom’s tidy, contemporary feel.")
+    # agent.LocalizeTextPrompt("A modern, low-profile white porcelain toilet composed of a smooth oval bowl, a slim matching lid, and a compact rectangular tank with a small chrome side-mounted flush lever. The base flares gently where it meets the tan ceramic floor tiles, giving it a seamless, molded look. Glossy beige wall tiles rise behind it, making the toilet’s bright white glaze stand out. No decorative items sit on the tank; the surface is clean and bare. The seat and lid are both closed, their edges forming a neat, even line over the rim. Just above and to the side is a brushed-steel towel bar holding neatly folded white and aqua hand towels, reinforcing the bathroom’s tidy, contemporary feel.")
     # agent.LocalizeImagePrompt(Image.open("/home/orbit/桌面/Nav-2025/text.png"))
+
+    agent.LocalizeTextPrompt("toilt")

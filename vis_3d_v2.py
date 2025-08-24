@@ -33,7 +33,7 @@ def compute_transparency_weights(grid_pos, best_points, radius=50.0, falloff_rat
     return weights
 
 
-def cluster_best_points(best_points, eps=10.0, min_samples=3):
+def cluster_best_points(best_points, eps=5.0, min_samples=6):
     """
     对best点进行聚类，找出聚类中心
     
@@ -196,20 +196,20 @@ def visualize_with_material_transparency(pc, rgb, best,
     mat_highlight.shader = "defaultUnlit"
     mat_highlight.point_size = 15
     
-    scene.scene.add_geometry("highlights", highlight_pcd, mat_highlight)
+    # scene.scene.add_geometry("highlights", highlight_pcd, mat_highlight)
     
     # 添加聚类中心点（可选，用更大的点表示）
     if len(cluster_centers) > 0:
         center_pcd = o3d.geometry.PointCloud()
         center_pcd.points = o3d.utility.Vector3dVector(cluster_centers)
         # 聚类中心使用白色
-        center_colors = np.array([[1.0, 1.0, 1.0]] * len(cluster_centers))
+        center_colors = np.array([[1.0, 0, 0]] * len(cluster_centers))
         center_pcd.colors = o3d.utility.Vector3dVector(center_colors)
         
         mat_center = o3d.visualization.rendering.MaterialRecord()
         mat_center.base_color = [1.0, 1.0, 1.0, 1.0]
         mat_center.shader = "defaultUnlit"
-        mat_center.point_size = 30.0
+        mat_center.point_size = 40.0
         
         scene.scene.add_geometry("cluster_centers", center_pcd, mat_center)
     
@@ -225,9 +225,10 @@ def visualize_with_material_transparency(pc, rgb, best,
 # 主函数
 if __name__ == "__main__":
     # 加载数据
-    grid_pos = np.load("/home/orbit/桌面/Nav-2025/memory/objectnav/hm3d_v2/00814-p53SfW6mjZe_island_0/grid_rgb_pos.npy")
-    grid_rgb = np.load("/home/orbit/桌面/Nav-2025/memory/objectnav/hm3d_v2/00814-p53SfW6mjZe_island_0/grid_rgb.npy")
-    best = np.load('/home/orbit/桌面/Nav-2025/localize_results/best_pos_topK_img_input.npy')
+    grid_pos = np.load("/home/orbit/桌面/Nav-2025/memory/objectnav/hm3d_v2/00873-bxsVRursffK_island_0/grid_rgb_pos.npy")
+    grid_rgb = np.load("/home/orbit/桌面/Nav-2025/memory/objectnav/hm3d_v2/00873-bxsVRursffK_island_0/grid_rgb.npy")
+    best = np.load('/home/orbit/桌面/Nav-2025/memory/objectnav/hm3d_v2/00873-bxsVRursffK_island_0/best_locs_a bed.npy')
+
 
     print("\n4. Attempting material transparency with gradient highlights...")
     # 可以尝试不同的颜色映射

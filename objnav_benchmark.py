@@ -98,6 +98,68 @@ def get_start_episode(csv_path="objnav_mp3d_v1_results.csv"):
             start_episode = max(0, row_count - 2)
 
     return start_episode
+
+def create_simple_navigation_video(episode_images, episode_topdowns, action_hist, 
+                                 output_path='navigation_video.mp4', fps=5):
+    """
+    创建简单的导航视频，拼接高度一致，保持原始比例
+    """
+    # 确保动作列表长度匹配
+    if len(action_hist) < len(episode_images):
+        last_action = action_hist[-1] if action_hist else "unknown"
+        action_hist = action_hist + [last_action] * (len(episode_images) - len(action_hist))
+    elif len(action_hist) > len(episode_images):
+        action_hist = action_hist[:len(episode_images)]
+    
+    writer = imageio.get_writer(output_path, fps=fps)
+    
+    for idx, (rgb_img, topdown_img, action) in enumerate(zip(episode_images, episode_topdowns, action_hist)):
+        # 确保图像格式正确
+        if rgb_img.dtype != np.uint8:
+            rgb_img = (rgb_img * 255).astype(np.uint8)
+        if topdown_img.dtype != np.uint8:
+            topdown_img = (topdown_img * 255).astype(np.uint8)
+            
+        # 获取原始尺寸
+        rgb_h, rgb_w = rgb_img.shape[:2]
+        topdown_h, topdown_w = topdown_img.shape[:2]
+        
+        # 使用RGB图像的高度作为目标高度
+        target_height = rgb_h
+        
+        # 如果topdown高度不同，按比例缩放
+        if topdown_h != target_height:
+            scale = target_height / topdown_h
+            new_width = int(topdown_w * scale)
+            topdown_img = cv2.resize(topdown_img, (new_width, target_height))
+        
+        # 横向拼接（现在高度相同）
+        combined = np.hstack((rgb_img, topdown_img))
+        
+        # 添加文本区域
+        text_height = 80
+        text_area = np.ones((text_height, combined.shape[1], 3), dtype=np.uint8) * 255
+        frame = np.vstack((combined, text_area))
+        
+        # 添加居中的动作文本
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        text = f"Frame {idx+1}: Action: {action}"
+        font_scale = 0.8
+        thickness = 2
+        
+        # 计算文本大小和位置
+        (text_width, text_height_size) = cv2.getTextSize(text, font, font_scale, thickness)[0]
+        x_position = (frame.shape[1] - text_width) // 2
+        y_position = combined.shape[0] + 50
+        
+        cv2.putText(frame, text, (x_position, y_position), 
+                   font, font_scale, (0, 0, 0), thickness)
+        
+        writer.append_data(frame)
+    
+    writer.close()
+    print(f"Video saved to: {output_path}")
+    return output_path
         
 
 def load_qwen():
@@ -253,6 +315,7 @@ class GESObjectNavRobot:
 
         self.nav_log = {'long_memory_query':0, 'working_memory_query':0, 'search_point':0, 'success':0}
         self.state_hist = []
+        self.action_hist = []
         self.agent_response_log = []
         self.loc_hist = {'long_memory':[], 'working_memory':[]}
 
@@ -751,6 +814,7 @@ class GESObjectNavRobot:
                 cv2.waitKey(1)
             if not self.memory.args.quite:
                 print("action:", action)
+            self.action_hist.append(action)
             self.state_hist.append(self.benchmark_env.sim.agents[0].get_state())
             self.curr_obs = self.benchmark_env.step(action)
             # if action not in ['stop', 'look_up', 'look_down']:
@@ -1240,6 +1304,8 @@ if __name__ == "__main__":
             topdown_writer.append_data(topdown)
         fps_writer.close()
         topdown_writer.close()
+        create_simple_navigation_video(episode_images, episode_topdowns, Robot.action_hist, "%s/navigation.mp4"%dir)
+
         evaluation_metrics = {'success':habitat_benchmark_env.get_metrics()['success'],
                                'spl':habitat_benchmark_env.get_metrics()['spl'],
                                'distance_to_goal':habitat_benchmark_env.get_metrics()['distance_to_goal'],

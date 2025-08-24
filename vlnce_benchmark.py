@@ -47,7 +47,7 @@ def adjust_topdown(metrics, args):
 
 if __name__ == "__main__":
 
-    csv_path = "vlnce_r2r_mp3d_results_forfig.csv"
+    csv_path = "vlnce_r2r_mp3d_results_forfig_2.csv"
     args = get_args()
     
 
@@ -115,7 +115,7 @@ if __name__ == "__main__":
 
         episode_images, episode_topdowns, _  = Robot.move2VLNprompt(instruction)
         # episode_images, episode_topdowns, _ = Robot.keyboard_explore()
-        
+        create_simple_navigation_video(episode_images, episode_topdowns, Robot.action_hist, "%s/navigation.mp4"%dir)
         for image,topdown in zip(episode_images,episode_topdowns):
             fps_writer.append_data(image)
             topdown_writer.append_data(topdown)
@@ -125,6 +125,7 @@ if __name__ == "__main__":
                                'spl':habitat_benchmark_env.get_metrics()['spl'],
                                'Ospl':habitat_benchmark_env.get_metrics()['oracle_spl'], 
                                'distance_to_goal':habitat_benchmark_env.get_metrics()['distance_to_goal'],
+                               "instruction": instruction,
                                'id': args.scene_name,
                                'island': current_island,
                                'island_area': area_shape,
