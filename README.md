@@ -21,6 +21,20 @@ by [Shouwei Ruan](https://heathcliff-saku.github.io/), [Liyuan Wang](https://lyw
   </tr>
 </table>
 
+<table>
+  <tr>
+    <td align="center">
+      <video src="./assets/real1.mp4" height="200" alt="GIF 1">
+    </td>
+    <td align="center">
+      <video src="./assets/real2.mp4" height="200" alt="GIF 2">
+    </td>
+    <td align="center">
+      <video src="./assets/real3.mp4" height="200" alt="GIF 3">
+    </td>
+  </tr>
+</table>
+
 
 We proposed BSC-Nav (Brain-inspired spatial cognition for navigation), which leverages bio-inspired spatial cognition mechanisms to continuously understand the surrounding environment by constructing structured spatial memory, supporting general navigation and more advanced spatial intelligence. Our paper is currently under review, and all features will be made publicly available in the near future.
 
