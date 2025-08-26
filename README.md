@@ -1,4 +1,4 @@
-# <center>Brain-inspired Spatial Cognition for Navigation (BSC-Nav)</center>
+# <center><font color="#FF0000">B</font>rain-inspired <font color="#D200d2">S</font>patial <font color="#8600ff">C</font>ognition for <font color="#0080ff">Nav</font>igation </center>
 
 This repository is the official implementation of our paper (From reactive to cognitive: brain-inspired spatial intelligence for embodied agents) 
 
