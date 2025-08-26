@@ -24,13 +24,13 @@ by [Shouwei Ruan](https://heathcliff-saku.github.io/), [Liyuan Wang](https://lyw
 <table>
   <tr>
     <td align="center">
-      <video src="./assets/real1.mp4" controls="controls" height="200" type="video/mp4">
+      <img src="./assets/real2.gif" height="200" alt="GIF 5">
     </td>
     <td align="center">
-      <video src="./assets/real2.mp4" controls="controls" height="200" type="video/mp4">
+      <img src="./assets/real3.gif" height="200" alt="GIF 6">
     </td>
     <td align="center">
-      <video src="./assets/real3.mp4" controls="controls" height="200" type="video/mp4">
+      <img src="./assets/real1.gif" height="200" alt="GIF 7">
     </td>
   </tr>
 </table>
