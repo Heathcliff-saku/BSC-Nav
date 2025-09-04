@@ -1,0 +1,20 @@
+defaults:
+  - task_config_base
+  - actions:
+    - stop
+    - move_forward
+    - turn_left
+    - turn_right
+    - look_up
+    - look_down
+  - measurements:
+    - distance_to_goal
+    - success
+    - spl
+    - oracle_spl
+  - lab_sensors:
+    - instruction_sensor
+  - _self_
+
+
+type: VLN-v0

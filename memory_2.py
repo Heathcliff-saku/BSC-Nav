@@ -18,7 +18,7 @@ import h5py
 import time
 import open3d as o3d
 from scipy.spatial.transform import Rotation as R
-from args import get_args
+# from args import get_args
 from utils import *
 from env import NavEnv
 from concurrent.futures import ProcessPoolExecutor
@@ -1388,13 +1388,15 @@ class VoxelTokenMemory():
             
      
         
-if __name__ == "__main__":
+# if __name__ == "__main__":
     
-    args = get_args()
-    memory = VoxelTokenMemory(args)
+    # args = get_args()
+    # memory = VoxelTokenMemory(args)
     # memory.matching2D(obs_path='/home/orbit-new/桌面/orbit/shouwei_GES/VLDMap/Vlmaps/DistributionMap_dynamic/vlmaps/data/vlmaps_dataset/5q7pvUzZiYa_1/rgb/000307.png',
     #     text_prompts="A potted plant featuring a round blue vase topped with a white bouquet of a handful of green leaves.")
-    memory.create_memory()
+    # memory.create_memory()
+
+
     # memory.exploring_create_memory()
     # memory.explore_entire_space()
     

@@ -7,7 +7,7 @@ import time
 import random
 import imageio
 from tqdm import tqdm
-from args import get_args
+# from args import get_args
 from utils import show_obs, keyboard_control_fast
 import cv2
 
@@ -698,11 +698,11 @@ def show_obs(obs):
     bgr = cv2.cvtColor(obs["rgb"], cv2.COLOR_RGB2BGR)
     cv2.imshow("RGB", bgr)
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
     
-    args = get_args()
-    env = NavEnv(args)
-    env.keyboard_explore()
+    # args = get_args()
+    # env = NavEnv(args)
+    # env.keyboard_explore()
     # env = NavBenchmarkEnv(args)
     # habitat_env = env.sims
     # evaluation_metrics = []

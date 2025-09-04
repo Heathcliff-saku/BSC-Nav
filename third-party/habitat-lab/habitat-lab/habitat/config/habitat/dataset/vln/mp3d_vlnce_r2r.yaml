@@ -1,0 +1,10 @@
+# @package habitat.dataset
+defaults:
+  - /habitat/dataset: dataset_config_schema
+  - _self_
+
+
+type: VLN-CE-v1
+split: train
+data_path: "/home/orbit/桌面/Nav-2025/data_episode/vln/R2R_VLNCE_v1-3_preprocessed/{split}/{split}.json.gz"
+scenes_dir: "data/scene_datasets/"

@@ -10,7 +10,7 @@
 /log
 /3D-object-asset
 /baselines
-/third-party
+# /third-party
 /yolov8x-worldv2.pt
 /GES_vlnce
 *.png

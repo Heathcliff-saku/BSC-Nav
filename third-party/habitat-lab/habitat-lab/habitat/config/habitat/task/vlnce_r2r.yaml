@@ -1,0 +1,19 @@
+defaults:
+  - task_config_base
+  - actions:
+    - stop
+    - move_forward
+    - turn_left
+    - turn_right
+    - look_up
+    - look_down
+  - measurements:
+    - distance_to_goal
+    - success
+    - spl
+  - lab_sensors:
+    - instruction_sensor
+  - _self_
+
+type: VLN-v0
+GT_PATH: "/home/orbit/桌面/Nav-2025/data_episode/vln/R2R_VLNCE_v1-3_preprocessed/{split}/{split}_gt.json.gz"
