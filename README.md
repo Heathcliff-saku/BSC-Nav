@@ -62,23 +62,20 @@ conda activate bscnav
 # install habitat-sim with bullet physics (also see https://github.com/facebookresearch/habitat-sim#installation)
 conda install habitat-sim withbullet -c conda-forge -c aihabitat
 
-# install habitat-lab stable version
-git clone --branch stable https://github.com/facebookresearch/habitat-lab.git
-cd habitat-lab
-pip install -e habitat-lab  # install habitat_lab
-
-```
-
-2. Clone this repo and install dependencies
-
-```
+# Clone this repo and install dependencies
 git clone --branch sim https://github.com/Heathcliff-saku/BSC-Nav.git
 cd BSC-Nav
+
 pip install -r requirements.txt 
 # You may need to manually resolve version conflicts
+
+# install habitat-lab stable version
+cd /third-party/habitat-lab
+pip install -e habitat-lab  # install habitat_lab
+pip install -e habitat-baselines 
 ```
 
-3. Download scene dataset and benchmark episode files
+2. Download scene dataset and benchmark episode files
 
 - BSC-Nav is evaluated under HM3D and MP3D scene datasets, for download, We strongly recommend referring to the following guidelines: 
 
@@ -127,6 +124,27 @@ pip install -r requirements.txt
 
 ### 🎮 Quick start with BSC-Nav !
 
+We provide a simple demo in the hm3d environment. After downloading the scene data, you can try to use the following script to perform navigation in the environment:
+
+```
+# Build memory first
+python demo.py --build_memory --scene_name "00873-bxsVRursffK" --visualize
+```
+
+1. category-level navigation (Object-goal)
+```
+python demo.py --nav_mode category --target "bed" --visualize --load_single_floor
+```
+
+2. Text-instance navigation
+```
+python demo.py --nav_mode text --target "input_text_here" --visualize --load_single_floor 
+```
+
+3. Image-instance navigation
+```
+python demo.py --nav_mode image --target_image "/path/to/target.jpg" --visualize --load_single_floor 
+```
 
 ### 🎯 Benchmarks
 
