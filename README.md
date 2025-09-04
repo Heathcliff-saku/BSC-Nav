@@ -124,28 +124,6 @@ pip install -e habitat-baselines
 
 ### 🎮 Quick start with BSC-Nav !
 
-We provide a simple demo in the hm3d environment. After downloading the scene data, you can try to use the following script to perform navigation in the environment:
-
-```
-# Build memory first
-python demo.py --build_memory --scene_name "00873-bxsVRursffK" --visualize
-```
-
-1. category-level navigation (Object-goal)
-```
-python demo.py --nav_mode category --target "bed" --visualize --load_single_floor
-```
-
-2. Text-instance navigation
-```
-python demo.py --nav_mode text --target "input_text_here" --visualize --load_single_floor 
-```
-
-3. Image-instance navigation
-```
-python demo.py --nav_mode image --target_image "/path/to/target.jpg" --visualize --load_single_floor 
-```
-
 ### 🎯 Benchmarks
 
 0. Structured spatial memory construction:
