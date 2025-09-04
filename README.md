@@ -4,7 +4,7 @@
 <a href="https://arxiv.org/abs/2508.17198"><img src="https://img.shields.io/badge/arXiv-2508.17198-b31b1b" alt="arXiv"></a>
 <a href="https://arxiv.org/abs/2508.17198"><img src="https://img.shields.io/badge/Project_Page-green" alt="Project Page"></a>
 <a href="https://github.com/Heathcliff-saku/BSC-Nav/tree/phy"><img src="https://img.shields.io/badge/PHY-CODE-blue" alt="Project Page"></a>
-<a href='https://github.com/Heathcliff-saku/BSC-Nav'><img src='https://img.shields.io/github/stars/Heathcliff-saku/BSC-Nav.svg?style=social&label=Star&maxAge=2592000'></a>
+<a href='https://github.com/Heathcliff-saku/BSC-Nav'><img src='https://img.shields.io/github/stars/Heathcliff-saku/BSC-Nav.svg?style=social&label=Star'></a>
 
 
 This repository is the official implementation of our paper (From reactive to cognitive: brain-inspired spatial intelligence for embodied agents) 
@@ -123,6 +123,28 @@ pip install -e habitat-baselines
 ```
 
 ### 🎮 Quick start with BSC-Nav !
+
+We provide a simple demo in the hm3d environment. After downloading the scene data, you can try to use the following script to perform navigation in the environment:
+
+```
+# Build memory first
+python demo.py --build_memory --scene_name "00873-bxsVRursffK" --visualize
+```
+
+1. category-level navigation (Object-goal)
+```
+python demo.py --nav_mode category --target "bed" --visualize --load_single_floor
+```
+
+2. Text-instance navigation
+```
+python demo.py --nav_mode text --target "input_text_here" --visualize --load_single_floor 
+```
+
+3. Image-instance navigation
+```
+python demo.py --nav_mode image --target_image "/path/to/target.jpg" --visualize --load_single_floor 
+```
 
 ### 🎯 Benchmarks
 
