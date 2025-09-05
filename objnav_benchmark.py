@@ -284,19 +284,19 @@ class GESObjectNavRobot:
         self.client = OpenAI(
                 # base_url='https://api.nuwaapi.com/v1',
                 # api_key='sk-A2HvPdqB5NN2Dj1AiRk1Z0085Q6PzJ3ls0nbt2BQTcfvWagG'
-                base_url='https://xiaoai.plus/v1',
-                api_key='sk-XalCM6C0Wocy4amFS1RNj8KJMqcNKJbD95Uhgm0rzWkYg15Q'
+                # base_url='https://xiaoai.plus/v1',
+                # api_key='sk-XalCM6C0Wocy4amFS1RNj8KJMqcNKJbD95Uhgm0rzWkYg15Q'
                 # api_key='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'
                 
             )
         
         self.api_key_pool = [
-            'sk-maKQVsTB0OwWx8puEfFjP0Bncq6KZ9LtuLl0bjKoz0zBPxEk',
-            'sk-67UvJf8exciXyfF2SItVenxPgdSo9Zg9thHptAe4tBIWkP7d',
-            'sk-Q9wIUZ0mSNQKRZLcCa6t387rRPR5QJrqvMWWzYK2ngBWmwvz',
-            'sk-kXvfyQkjctI3cziIytRVSxs2bUHfzEXgQh6C2vnGIbauofvt',
-            'sk-m6viotUq3PMIR6ROBjDdODQK9W2Ur6sYc6ujzvBegNMvpsj1',
-            'sk-9h5cah2084Mr5xLm9zHGt7MzHRgXD17Y5E6SGcOiOMubG30Q'
+            # 'sk-maKQVsTB0OwWx8puEfFjP0Bncq6KZ9LtuLl0bjKoz0zBPxEk',
+            # 'sk-67UvJf8exciXyfF2SItVenxPgdSo9Zg9thHptAe4tBIWkP7d',
+            # 'sk-Q9wIUZ0mSNQKRZLcCa6t387rRPR5QJrqvMWWzYK2ngBWmwvz',
+            # 'sk-kXvfyQkjctI3cziIytRVSxs2bUHfzEXgQh6C2vnGIbauofvt',
+            # 'sk-m6viotUq3PMIR6ROBjDdODQK9W2Ur6sYc6ujzvBegNMvpsj1',
+            # 'sk-9h5cah2084Mr5xLm9zHGt7MzHRgXD17Y5E6SGcOiOMubG30Q'
         ]
         self.api_id = 0
 

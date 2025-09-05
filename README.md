@@ -124,6 +124,7 @@ pip install -e habitat-baselines
 
 ### 🎮 Quick start with BSC-Nav !
 
+
 ### 🎯 Benchmarks
 
 0. Structured spatial memory construction:

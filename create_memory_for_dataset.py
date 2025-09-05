@@ -67,7 +67,7 @@ if __name__ == "__main__":
         habitat_benchmark_env = get_objnav_env(args)
     # habitat_benchmark_env.sim.episode_iterator.set
 
-    memory = VoxelTokenMemory(args, build_map=False, preload_dino=dinov2, preload_yolo=yolow)
+    memory = VoxelTokenMemory(args, build_map=False, preload_dino=dinov2, preload_yolo=yolow, need_diffusion=False)
     Robot = GESObjectNavRobot(memory, habitat_benchmark_env, load_local_qwen=False)
 
     for i in tqdm(range(1000)):
