@@ -129,7 +129,7 @@ pip install -e habitat-baselines
 
 0. Structured spatial memory construction:
 ```
-python create_memory_for_dataset.py
+python create_memory_for_dataset.py --no_vis
 ```
 
 1. For *Object-goal navigation* :
